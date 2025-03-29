@@ -14,10 +14,9 @@ export const useFoodStore = create((set) => ({
             },
             body:JSON.stringify(newFood),
         }); //huh do not understand this part
-    const data= await res.json();
-    set((state) => ({foods:[...state.foods,data.data] }));
-    //interacts w back end
-},
+        const data= await res.json();
+        set((state) => ({foods:[...state.foods,data.data] }));
+        return {success:true, message:"Food made successfully."};
+        //interacts w back end
+    },
 }));
-
-const [state,setState] = useState([])

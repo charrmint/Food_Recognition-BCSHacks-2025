@@ -1,13 +1,14 @@
-import { chakra, useClipboard } from "@chakra-ui/react";
+import { chakra, useClipboard, useColorModeValue } from "@chakra-ui/react";
 import { Button, Container, Flex, HStack, Text, useColorMode } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-
 import { PlusSquareIcon } from "@chakra-ui/icons";
+import { LuSun } from "react-icons/lu";
+import { IoMoon } from "react-icons/io5";
 
 const Navbar = () => {
   const {colorMode, toggleColorMode} = useColorMode();
   return (
-    <Container maxW={"1140px"} px = {4}>
+    <Container maxW={"1140px"} px = {4} >
       <Flex h = {16}
             alignItems={"center"}
             justifyContent={"space-between"}
@@ -17,15 +18,14 @@ const Navbar = () => {
             }}
       >
         <Text
-          bgGradient= 'linear(to-l, #7929CA, #FF0080'
-          bgClip= 'text'
-          fontSize='6xl'
-          fontWeight='bold'
+          fontSize={{base: "22", sm: "28"}}
+          fontWeight={"bold"}
           textTransform={"uppercase"}
           textAlign={"center"}
+          bgGradient={"linear(to-r, cyan.400, blue.500)"}
+          bgClip={"text"}
         >
-          <Link to = {"/"}> Inventory </Link>
-          
+          <Link to = {"/"}> Food Inventory </Link>
         </Text>
         <HStack spacing ={2} alignItems={"center"}>
           <Link to = {"/create"}>
@@ -33,6 +33,9 @@ const Navbar = () => {
             <PlusSquareIcon fontSize={20} />
           </Button>
           </Link>
+          <Button onClick={toggleColorMode}>
+            {colorMode === "light" ? <IoMoon size='20' /> : <LuSun size='20' />}
+          </Button>
         </HStack>
 
       </Flex>
