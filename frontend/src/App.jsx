@@ -1,3 +1,4 @@
+import { Button } from '@chakra-ui/react';
 
 function App() {
 
@@ -7,7 +8,7 @@ function App() {
         Hello
       </Button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
