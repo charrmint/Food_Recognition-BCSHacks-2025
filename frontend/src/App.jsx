@@ -3,7 +3,10 @@ import { Route, Routes } from 'react-router-dom';
 import CreatePage from './pages/CreatePage';
 import HomePage from './pages/HomePage';
 import Navbar from './components/Navbar';
+import { useFoodStore } from './store/food';
+
 function App() {
+  const {foods}=useFoodStore()
 
   return (
     <>
