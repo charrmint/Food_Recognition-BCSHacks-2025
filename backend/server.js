@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 
 const app = express();
 
-app.get("/products", (req, res) => {
-    req.send("Server is ready123");
+app.get("/", (req, res) => {
+    res.send("Server is ready123");
 });
 
 app.listen(5000, () => {
