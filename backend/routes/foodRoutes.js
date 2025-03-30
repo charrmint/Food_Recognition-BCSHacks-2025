@@ -7,10 +7,10 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     try {
         // get user input
-        const { _id, refrigeratorId } = req.body;
+        const { name, refrigeratorId } = req.body;
 
         // check if all fields are filled
-        if (!_id || !refrigeratorId ) {
+        if (name || !refrigeratorId ) {
             return res.status(400).json({
                 error: 'All fields are required'
             });
@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
 
         // create new food from input
         const newFood = new Food({ 
-            _id: _id, 
+            name: name, 
             refrigerator: refrigeratorId,
         });
 

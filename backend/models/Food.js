@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const FoodSchema = new mongoose.Schema({
-    _id: {
+    name: {
         type: String,
         required: true,
     }, timestamp: { 
@@ -11,7 +11,7 @@ const FoodSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Refrigerator'
     }
-}, { _id: false });
+});
 
 const foodModel = mongoose.model("Food", FoodSchema);
 
