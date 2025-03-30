@@ -1,6 +1,5 @@
 import {Box, Container, Heading, useColorModeValue, useToast, VStack, Input, Button} from '@chakra-ui/react';
 import {useState, useEffect} from 'react';
-import {useFoodStore} from '../store/food';
 //let refrigerator_id_here = 1;
 
 //needs to interact with backend to be able to addFoods
@@ -10,29 +9,70 @@ const CreatePage = () => {
         quantity: "",
     });
 
+    const [foodMap, setFoodMap] = useState(new Map());
     const toast = useToast()
 
     //new
-    const {foodList, createFood, fetchFood } = useFoodStore();
+    // const {foodList, createFood, fetchFood } = useFoodStore();
     
     useEffect(() => {
-        fetchFood();
-    }, [fetchFood]);
+        const fetchFoodMap = async() => {
+            try {
+                const response = await axios.get(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/foodMap`);
+                const foodData = response.data.foodMap;
 
-    const handleAddFood = async() => {
-        //const { name, quantity } = newFood;
-        const { success, message } = await createFood(newFood);
-        toast({
-            title: success ? "Success" : "Error",
-            description: message,
-            status: success ? "success" : "error",
-            isClosable: true,
-        });
+                const map = new Map(Object.entries(foodData));
+                setFoodMap(map);
+            } catch (error) {
+                console.error('Error fetching food map:', error);
+            }
+        };
+        
+        fetchFoodMap();
+    }, []);
 
-        if (success) {
-            setNewFood({ name: "", quantity: "" }); // reset input
-            fetchFood();
-            //new
+    const handleAddFood = async () => {
+        const { name, quantity } = newFood;
+
+        console.log("Adding food:", newFood);
+
+        if (!name || !quantity) {
+            toast({
+                title: 'Error',
+                description: 'Food name and quantity are required.',
+                status: 'error',
+                isClosable: true,
+            });
+            return;
+        }
+
+        try {
+            const response = await axios.post(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/addFood`, { name, quantity });
+
+            if (response.status === 201) {
+                toast({
+                    title: 'Success',
+                    description: 'Food added successfully.',
+                    status: 'success',
+                    isClosable: true,
+                });
+                
+                // Reset form after success
+                setNewFood({ name: '', quantity: '' });
+                
+                // Re-fetch the foodMap after adding a new food
+                const updatedFoodMap = new Map(foodMap);
+                updatedFoodMap.set(name, quantity); // Add the new food to the Map
+                setFoodMap(updatedFoodMap);
+            }
+        } catch (error) {
+            console.error('Error adding food:', error);
+            toast({
+                title: 'Error',
+                description: error.response ? error.response.data.error : 'Something went wrong.',
+                status: 'error',
+                isClosable: true,
+            });
         }
     };
 
