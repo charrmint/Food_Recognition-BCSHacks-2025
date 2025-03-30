@@ -58,7 +58,7 @@ router.put('/:id/removeUser', async (req, res) => {
             return res.status(404).json({ message: 'Refrigerator not found' });
         }
 
-        refrigerator.users = refrigerator.users.filter(user => user.toString() !== userId);
+        refrigerator.userList = refrigerator.userList.filter(user => user.toString() !== userId);
 
         await refrigerator.save();
 
