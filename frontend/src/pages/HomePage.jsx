@@ -22,7 +22,7 @@ const HomePage = () => {
           bgClip="text"
           textAlign="center"
       >
-        Fridge
+        Fridge Inventory
         </Text>
 
         <SimpleGrid
@@ -41,11 +41,6 @@ const HomePage = () => {
                     ) : (
                         <Text fontSize="xl" textAlign="center" fontWeight="bold" color="gray.500">
                             No foods added{" "}
-                            <Link to="/create">
-                                <Text as="span" color="blue.500" _hover={{ textDecoration: "underline" }}>
-                                    Add food
-                                </Text>
-                            </Link>
                         </Text>
                     )}
                 </SimpleGrid>
