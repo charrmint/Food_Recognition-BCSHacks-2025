@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
         await newFood.save();
 
         // add food to refrigerator
-        refrigerator.foodList.push(newFood._id);
+        refrigerator.foodList.push(newFood.food_id);
         await refrigerator.save();
 
         res.status(201).json(newFood);
