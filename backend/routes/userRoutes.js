@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
         await newUser.save();
 
         // add food to refrigerator
-        refrigerator.foodList.push(newUser._id);
+        refrigerator.userList.push(newUser._id);
         await refrigerator.save();
 
         res.status(201).json(newFood);
