@@ -2,7 +2,7 @@ import { chakra, useClipboard, useColorModeValue } from "@chakra-ui/react";
 import { Button, Container, Flex, HStack, Text, useColorMode } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { PlusSquareIcon } from "@chakra-ui/icons";
-//import { BiFood } from "react-icons/bi";
+import { MdSettings } from "react-icons/md"
 import { LuSun } from "react-icons/lu";
 import { IoMoon } from "react-icons/io5";
 
@@ -39,7 +39,7 @@ const Navbar = () => {
 
           <Link to={"/user"}>
             <Button>
-              <PlusSquareIcon fontSize={20} />
+              <MdSettings fontSize={20} />
             </Button>
           </Link>
           <Button onClick={toggleColorMode}>

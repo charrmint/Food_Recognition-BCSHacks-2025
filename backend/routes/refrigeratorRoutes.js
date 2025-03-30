@@ -156,4 +156,18 @@ router.post('/:id/addFood', async (req, res) => {
 
 });
 
+router.get('/:id/foodMap', async (req, res) => {
+    try {
+        const refrigerator = await Refrigerator.findById(req.params.id);
+
+        if (!refrigerator) {
+            return res.status(404).json({ message: 'Refrigerator not found '})
+        }
+
+        res.status(200).json({ foodMap: refrigerator.foodMap });
+    } catch (err) {
+        res.status(404).json({ error: err.message})
+    }
+})
+
 export default router;

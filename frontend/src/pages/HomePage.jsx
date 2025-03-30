@@ -9,7 +9,7 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchFood();
-}, [fetchFood, foodList]);
+}, [fetchFood]);
 
 
   return (
