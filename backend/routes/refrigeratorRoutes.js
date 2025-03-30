@@ -76,21 +76,25 @@ router.delete('/:id/removeFoods', async (req, res) => {
         const refrigerator = await Refrigerator.findById(id);
 
         if (!foodName || !quantity) {
-            return res.status(400).json({ message: 'Food name and quantity are required' });
+            return res.status(400).json({ error: 'Food name and quantity are required' });
         }
 
         if (!refrigerator) {
-            return res.status(404).json({ message: 'Refrigerator not found' });
+            return res.status(404).json({ error: 'Refrigerator not found' });
         }
 
         if (!refrigerator.foodMap.has(foodName)) {
-            return res.status(404).json({ message: 'Food not found in refrigerator' });
+            return res.status(404).json({ error: 'Food not found in refrigerator or pantry' });
+        }
+
+        if(refrigerator.foodMap.get(foodName).location == 'inside') {
+            return res.status(404).json({ error: 'Can not manually remove foods inside refrigerator'});
         }
 
         const quantityToDelete = parseInt(quantity, 10);
 
         if (isNaN(quantityToDelete) || quantityToDelete <= 0) {
-            return res.status(400).json({ message: 'Invalid quantity value' });
+            return res.status(400).json({ error: 'Invalid quantity value' });
         }
 
         const currentFood = refrigerator.foodMap.get(foodName);
@@ -134,6 +138,11 @@ router.post('/:id/addFood', async (req, res) => {
         // Update the foods map with the new food item and its quantity
         // If the food already exists, update the quantity
         if (refrigerator.foodMap.has(foodName)) {
+
+            if(refrigerator.foodMap.get(foodName).location == 'inside') {
+                return res.status(404).json({ message: 'Can not manually add foods inside refrigerator'});
+            }
+
             refrigerator.foodMap.set(foodName, {
                 quantity: refrigerator.foodMap.get(foodName).quantity + quantity,
             });
@@ -168,6 +177,36 @@ router.get('/:id/foodMap', async (req, res) => {
     } catch (err) {
         res.status(404).json({ error: err.message})
     }
-})
+});
+
+router.post('/:id/updateFoodMap', async (req, res) => {
+    try {
+        const refrigerator = await Refrigerator.findById(req.params.id);
+
+        if (!refrigerator) {
+            return res.status(404).json({ error: 'Refrigerator not found '})
+        }
+
+        const {insideFood} = req.body; // array of "inside" food
+
+        // remove "inside" food
+        const updateFoodMap = Object.fromEntries(Object.entries(refrigerator.foodMap).filter
+            (([foodName, location]) => location !== 'inside'));
+
+        const mergedFoodMap = { ...insideFood, ...updateFoodMap };
+        const newFoodMap = new Map(mergedFoodMap);
+
+        refrigerator.foodMap = newFoodMap;
+
+        await refrigerator.save();
+
+        res.status(200).json({
+            message: "Food map updated successfully", foodMap: newFoodMap});
+
+
+    } catch (error) {
+        res.status(500).json({ error: err.message})
+    }
+});
 
 export default router;
