@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     }, password: {
         type: String,
         required: true
-    }, refrigerator: {
+    }, refrigeratorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Refrigerator'
     }
