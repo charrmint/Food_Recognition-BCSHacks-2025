@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
         await newUser.save();
 
         const fridge = await Refrigerator.findById(refrigeratorId);
-        fridge.userList.push(newUser);
+        fridge.userList.push(newUser._id);
         await fridge.save();
 
         res.status(201).json({
