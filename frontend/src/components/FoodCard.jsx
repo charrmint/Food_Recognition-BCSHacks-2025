@@ -1,16 +1,16 @@
-import {Box, Container, Heading, useColorModeValue, VStack} from '@chakra-ui/react';
-import { FaBottleWater, FaAppleAlt, FaCarrot } from 'react-icons/fa'; 
+import {Box, Heading, Text} from '@chakra-ui/react';
+import {FaAppleAlt, FaCarrot } from 'react-icons/fa'; 
 
 const foodIconMap = {
-    water: <FaBottleWater size={50} />,
+    //water: <FaBottleWater size={50} />,
     apple: <FaAppleAlt size={50} />,
     carrot: <FaCarrot size={50} />,
   };
 
-  //takes in food name, from backend?
+  //takes in food object, from backend, which has name and quantity
 const FoodCard = ({food}) => {
 
-    const foodIcon = foodIconMap[food.toLowerCase()] || null;
+    const foodIcon = foodIconMap[food.name.toLowerCase()] || null;
     //null if none of three
   return (
     <Box
@@ -32,7 +32,8 @@ const FoodCard = ({food}) => {
           no icon
         </Heading>
       )}
-      <Heading size="md">{food}</Heading>
+      <Heading size="md">{food.name}</Heading>
+      <Text fontSize="lg" color="gray.600">Quantity: {food.quantity}</Text>
     </Box>
   );
 };

@@ -1,10 +1,12 @@
 import {create} from "zustand"
 
+
+//want backend to provide food, and handle deletion
 export const useFoodStore = create((set) => ({
     foods:[],
     setFoods: (foods) => set({ foods}),
     createFood: async(newFood) =>{
-        if (!newFood.name) {
+        if (!newFood.name || !newFood.quantity) {
             return {success:false, message:"Please give food name (water, apple, carrot)."}
         }
         const res = await fetch("/api/foods", {

@@ -10,17 +10,18 @@ const HomePage = () => {
   useEffect(() => {
     fetchFood();
   }, [fetchFood]);
-  console.log("foods",foods);
+
+  //console.log("foods",foods);
 
   return (
     <Container maxW='container.xl' py={12}>
       <VStack spacing={8}>
       <Text 
-          fontsize={"30"}
-          fontWeight={"bold"}
-          bgGradient={"linear(to-r, cyan.400, blue.500)"}
-          bgClip={"text"}
-          textAlign={"center"}
+          fontSize="30"
+          fontWeight="bold"
+          bgGradient="linear(to-r, cyan.400, blue.500)"
+          bgClip="text"
+          textAlign="center"
       >
         Fridge
         </Text>
@@ -32,23 +33,26 @@ const HomePage = () => {
             lg: 3
           }}
           spacing={10}
-          w={"full"}
+          w="full"
         >
-          {foods.map((food) => (
-            <FoodCard key={food._id} food={food}/>
-          ))}
-        </SimpleGrid>
-
-      <Text fontsize='xl' textAlign={"center"} fontWeight='bold' color = 'gray.500'>
-      No foods added {" "}
-      <Link to={"/create"}>
-      <Text as='span' color='blue.500' _hovor={{ textDecoration: "underline"}}>
-        Check for food
-        </Text>
-        </Link>
-        </Text>
-      </VStack>
-    </Container>
-  )
+          {foods.length > 0 ? (
+                        foods.map((food) => (
+                            <FoodCard key={food._id} food={food} />
+                        ))
+                    ) : (
+                        <Text fontSize="xl" textAlign="center" fontWeight="bold" color="gray.500">
+                            No foods added{" "}
+                            <Link to="/create">
+                                <Text as="span" color="blue.500" _hover={{ textDecoration: "underline" }}>
+                                    Add food
+                                </Text>
+                            </Link>
+                        </Text>
+                    )}
+                </SimpleGrid>
+            </VStack>
+        </Container>
+    );
 };
+
 export default HomePage;
