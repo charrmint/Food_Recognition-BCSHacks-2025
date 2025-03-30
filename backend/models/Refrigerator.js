@@ -12,7 +12,8 @@ const RefrigeratorSchema = new mongoose.Schema({
         of: {
             quantity: { type: Number, required: true }
         },
-        required: true
+        required: false,
+        default: {},
     }, pastImage: {
         type: String,
         required: false

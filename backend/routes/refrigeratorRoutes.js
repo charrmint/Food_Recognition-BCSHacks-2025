@@ -7,15 +7,14 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const { name, userIds, foodIds, currentImage, pastImage } = req.body;
+        const { name, userIds, foodMap, currentImage, pastImage } = req.body;
 
         const users = await User.find({ '_id': { $in: userIds } });
-        const foods = await Food.find({ '_id': { $in: foodIds } });
 
         const refrigerator = new Refrigerator({
             name,
             userList: users.map(user => user._id),
-            foodList: foods.map(food => food._id),
+            foodMap: foodMap,
             currentImage,
             pastImage
         });
@@ -91,5 +90,47 @@ router.put('/:id/removeFoods', async (req, res) => {
 }
 
 )
+
+router.post('/addFood', async (req, res) => {
+    try {
+        const { foodName, quantity, refrigeratorID} = req.body;
+        if (!foodName || !quantity || !refrigeratorID) {
+            return res.status(400).json({
+                error: 'All fields are required'
+            });
+        }
+
+        // Find the refrigerator by ID
+        const refrigerator = await Refrigerator.findById(refrigeratorID);
+        if (!refrigerator) {
+            return res.status(404).json ({
+                message: "Refrigerator not found"
+            });
+        }
+
+        // Update the foods map with the new food item and its quantity
+        // If the food already exists, update the quantity
+        if (refrigerator.foodMap.has(foodName)) {
+            refrigerator.foodMap.set(foodName, {
+                quantity: refrigerator.foodMap.get(foodName).quantity + quantity,
+            });
+        } else {
+            refrigerator.foodMap.set(foodName, {
+                quantity
+            });
+        }
+
+        // Save the updated refrigerator document
+        await refrigerator.save();
+        res.status(201).json({
+            message: "Food added successfully", refrigerator
+        });
+    } catch (error) {
+        res.status(400).json({
+            error: error.message
+        });
+    }
+
+});
 
 export default router;
