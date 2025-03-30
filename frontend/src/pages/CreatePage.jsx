@@ -1,22 +1,20 @@
 import {Box, Container, Heading, useColorModeValue, useToast, VStack, Input, Button} from '@chakra-ui/react';
 import {useState, useEffect} from 'react';
+import axios from 'axios';
 //let refrigerator_id_here = 1;
 
 //needs to interact with backend to be able to addFoods
 const CreatePage = () => {
     const [newFood, setNewFood] = useState({
-        name: "",
+        foodName: "",
         quantity: "",
     });
 
     const [foodMap, setFoodMap] = useState(new Map());
-    const toast = useToast()
+    const toast = useToast();
 
-    //new
-    // const {foodList, createFood, fetchFood } = useFoodStore();
-    
     useEffect(() => {
-        const fetchFoodMap = async() => {
+        const fetchFoodMap = async () => {
             try {
                 const response = await axios.get(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/foodMap`);
                 const foodData = response.data.foodMap;
@@ -32,11 +30,11 @@ const CreatePage = () => {
     }, []);
 
     const handleAddFood = async () => {
-        const { name, quantity } = newFood;
+        const { foodName, quantity } = newFood;
 
         console.log("Adding food:", newFood);
 
-        if (!name || !quantity) {
+        if (!foodName || !quantity) {
             toast({
                 title: 'Error',
                 description: 'Food name and quantity are required.',
@@ -47,7 +45,9 @@ const CreatePage = () => {
         }
 
         try {
-            const response = await axios.post(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/addFood`, { name, quantity });
+            const response = await axios.post(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/addFood`, { foodName, quantity });
+
+            console.log('Response:', response); // Log the response for more details
 
             if (response.status === 201) {
                 toast({
@@ -56,57 +56,77 @@ const CreatePage = () => {
                     status: 'success',
                     isClosable: true,
                 });
-                
+
                 // Reset form after success
-                setNewFood({ name: '', quantity: '' });
-                
+                setNewFood({ foodName: '', quantity: '' });
+
                 // Re-fetch the foodMap after adding a new food
                 const updatedFoodMap = new Map(foodMap);
-                updatedFoodMap.set(name, quantity); // Add the new food to the Map
+                updatedFoodMap.set(foodName, quantity); // Add the new food to the Map
                 setFoodMap(updatedFoodMap);
+            } else {
+                toast({
+                    title: 'Error',
+                    description: `Failed to add food. Status: ${response.status}`,
+                    status: 'error',
+                    isClosable: true,
+                });
             }
         } catch (error) {
             console.error('Error adding food:', error);
-            toast({
-                title: 'Error',
-                description: error.response ? error.response.data.error : 'Something went wrong.',
-                status: 'error',
-                isClosable: true,
-            });
+            
+            // Log error details for better debugging
+            if (error.response) {
+                console.error('Error response:', error.response);
+                toast({
+                    title: 'Error',
+                    description: `API Error: ${error.response.data.error}`,
+                    status: 'error',
+                    isClosable: true,
+                });
+            } else {
+                toast({
+                    title: 'Error',
+                    description: 'Something went wrong.',
+                    status: 'error',
+                    isClosable: true,
+                });
+            }
         }
     };
 
     return (
-    <Container maxW= "container.sm">
-        <VStack spacing={12}>
-            <Heading as="h1" size="2xl" textAlign="center" mb={8}>
-                Add new food
-            </Heading>
+        <Container maxW="container.sm">
+            <VStack spacing={12}>
+                <Heading as="h1" size="2xl" textAlign="center" mb={8}>
+                    Add new food
+                </Heading>
 
-            <Box
+                <Box
                     w="300px" bg={useColorModeValue("white", "gray.800")}
                     p={6} rounded={"lg"} shadow={"md"}
                 >
                     <VStack spacing={10}>
                         <Input
-                        placeholder='Food name'
-                        value={newFood.name}
-                        onChange={(e) => setNewFood({ ...newFood, name: e.target.value})}
+                            placeholder='Food name'
+                            value={newFood.foodName}
+                            onChange={(e) => setNewFood({ ...newFood, foodName: e.target.value })}
                         />
                         <Input
-                        placeholder='Quantity'
-                        type='number'
-                        value={newFood.quantity}
-                        onChange={(e) => setNewFood({ ...newFood, quantity: e.target.value})}
+                            placeholder='Quantity' 
+                            type='number'
+                            value={newFood.quantity}
+                            onChange={(e) => setNewFood({ ...newFood, quantity: e.target.value })}
                         />
 
-<Button colorScheme='blue'onClick={handleAddFood} w ='full'>
-                    Add Food
+                        <Button type="button" colorScheme="blue" onClick={() =>{
+                            console.log('Button clicked');
+                            handleAddFood();
+                        }} w="full">
+                            Add Food
                         </Button>
-                        
                     </VStack>
                 </Box>
-         
             </VStack>
         </Container>
     );
