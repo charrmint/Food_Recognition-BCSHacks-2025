@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
         }    
 
         // find refrigerator
-        const refrigerator = await Refrigerator.findById(refrigeratorID);
+        const refrigerator = await Refrigerator.findById(refrigeratorId);
         if (!refrigerator) {
             return res.status(404).json({ message: 'Refrigerator not found'});
         }
