@@ -1,5 +1,5 @@
 import express from 'express';
-import User from '../models/Food.js';
+import User from '../models/User.js';
 import Food from '../models/Food.js';
 import Refrigerator from '../models/Refrigerator.js';
 
