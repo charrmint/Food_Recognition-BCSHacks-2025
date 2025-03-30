@@ -15,7 +15,9 @@ router.post('/', async (req, res) => {
         const refrigerator = new Refrigerator({
             name,
             userList: users.map(user => user._id),
-            foodList: foods.map(food => food._id)
+            foodList: foods.map(food => food._id),
+            currentImage,
+            pastImage
         });
 
         await refrigerator.save();
