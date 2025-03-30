@@ -5,7 +5,8 @@ import {useFoodStore} from '../store/food';
 //needs to interact with backend to be able to addFoods
 const CreatePage = () => {
     const [newFood, setNewFood] = useState({
-        question: "",
+        name: "",
+        quantity: " ",
     });
 
     const toast = useToast()
@@ -29,7 +30,7 @@ const CreatePage = () => {
                     isClosable: true,
                 });
             }
-            setNewFood({question: ""});
+            setNewFood({name: ""});
         };
     return (
     <Container maxW= {"container.sm"}>
@@ -44,10 +45,11 @@ const CreatePage = () => {
                 >
                     <VStack spacing={4}>
                         <Input
-                        placeholder='Question'
-                        //question='question'
-                        value={newFood.question}
-                        onChange={(e) => setNewFood({ ...newFood, question: e.target.value})}
+                        placeholder='Food'
+                        name='Food'
+                        quantity='number'
+                        value={newFood.name}
+                        onChange={(e) => setNewFood({ ...newFood, name: e.target.value})}
                         />
 
 <Button colorScheme='blue'onClick={handleAddFood} w ='full'>

@@ -4,8 +4,8 @@ export const useFoodStore = create((set) => ({
     foods:[],
     setFoods: (foods) => set({ foods}),
     createFood: async(newFood) =>{
-        if (!newFood.question) {
-            return {success:false, message:"Please give question."}
+        if (!newFood.name) {
+            return {success:false, message:"Please give food name (water, apple, carrot)."}
         }
         const res = await fetch("/api/foods", {
             method:"POST",
@@ -19,4 +19,9 @@ export const useFoodStore = create((set) => ({
         return {success:true, message:"Food made successfully."};
         //interacts w back end
     },
+    fetchFood: async () => {
+        const res = await fetch("/api/foods");
+        const data = await res.json();
+        set({ foods: data.data });
+    }
 }));
