@@ -179,34 +179,129 @@ router.get('/:id/foodMap', async (req, res) => {
     }
 });
 
+// router.post('/:id/updateFoodMap', async (req, res) => {
+//     try {
+
+//         console.log("Something");
+//       const { id } = req.params;
+//       const { foodMap } = req.body; // Input foodMap from the request body
+
+//       console.log(foodMap);
+  
+//       // Find the refrigerator by ID
+//       const refrigerator = await Refrigerator.findById(id);
+  
+//       if (!refrigerator) {
+//         return res.status(404).json({ error: 'Refrigerator not found' });
+//       }
+  
+//       // Get access to the current foodmap
+//       let currentFoodMap = refrigerator.foodMap
+  
+//       // Filter the existing foodMap to remove foods with location 'inside'
+//       const filteredFoodMap = Object.fromEntries(
+//         Object.entries(currentFoodMap).filter(([foodName]) => foodName.location !== 'inside')
+//       );
+
+//       const newFoodMapResult = Object.fromEntries(Object.entries(foodMap));
+  
+//       // Merge the filtered foodMap with the newFoodMap from the request
+//       const mergedFoodMap = { ...filteredFoodMap, ...newFoodMapResult };
+  
+//       // Assign the merged foodMap to the refrigerator's foodMap
+//       refrigerator.foodMap = mergedFoodMap;
+  
+//       // Save the updated refrigerator
+//       await refrigerator.save();
+  
+//       // Respond with the updated foodMap
+//       res.status(200).json({ message: 'Food map updated successfully', foodMap: mergedFoodMap });
+  
+//     } catch (error) {
+//       console.error('Error updating foodMap:', error);
+//       res.status(404).json({ error: error.message });
+//     }
+//   });
+  
 router.post('/:id/updateFoodMap', async (req, res) => {
     try {
-        const refrigerator = await Refrigerator.findById(req.params.id);
+        const { id } = req.params;
+        const inputFoodObject = req.body.foodMap; // Input is likely a plain JS Object from JSON
+
+        // --- Input Validation (Recommended) ---
+        if (!inputFoodObject || typeof inputFoodObject !== 'object' || Array.isArray(inputFoodObject)) {
+             return res.status(400).json({ error: 'Invalid foodMap format in request body. Expected an object.' });
+        }
+        // --- End Input Validation ---
+
+        console.log("Received foodMap object from request:", inputFoodObject);
+
+        // Find the refrigerator by ID
+        const refrigerator = await Refrigerator.findById(id);
 
         if (!refrigerator) {
-            return res.status(404).json({ error: 'Refrigerator not found '})
+            return res.status(404).json({ error: 'Refrigerator not found' });
         }
 
-        const {insideFood} = req.body; // array of "inside" food
+        // Get the current foodMap (Mongoose should provide this as a Map)
+        const currentFoodMap = refrigerator.foodMap; // This should be a JS Map
 
-        // remove "inside" food
-        const updateFoodMap = Object.fromEntries(Object.entries(refrigerator.foodMap).filter
-            (([foodName, location]) => location !== 'inside'));
+        // --- Verification (Optional Debugging) ---
+        if (!(currentFoodMap instanceof Map)) {
+            console.warn('Warning: refrigerator.foodMap was not initially a Map instance. Type:', typeof currentFoodMap);
+            // Handle potential edge case if it's somehow stored differently, though unlikely with a Map schema type
+            // You might need to convert it here if it's not a map:
+            // currentFoodMap = new Map(Object.entries(currentFoodMap || {}));
+        }
+        // --- End Verification ---
 
-        const mergedFoodMap = { ...insideFood, ...updateFoodMap };
-        const newFoodMap = new Map(mergedFoodMap);
+        // Create the new Map for the result
+        const mergedMap = new Map();
 
-        refrigerator.foodMap = newFoodMap;
+        // 1. Add items from the CURRENT map ONLY if their location is NOT 'inside'
+        currentFoodMap.forEach((value, key) => {
+            // Ensure value has a location property before accessing it
+            if (value && value.location !== 'inside') {
+                mergedMap.set(key, value);
+            }
+        });
 
+        console.log("Map after filtering out 'inside' items:", Object.fromEntries(mergedMap)); // Log as object for readability
+
+        // 2. Add/Overwrite items from the INPUT object (these are assumed to be the new 'inside' items)
+        // The inputFoodObject is a plain JS object, so iterate its entries
+        for (const [key, value] of Object.entries(inputFoodObject)) {
+            // You might want to add validation here to ensure input items *do* have location: 'inside'
+            // if (value && value.location === 'inside') { // Example validation
+                 mergedMap.set(key, value);
+            // } else {
+            //    console.warn(`Item '${key}' from input ignored because its location was not 'inside' (or missing location).`);
+            //}
+        }
+
+        console.log("Map after merging input items:", Object.fromEntries(mergedMap)); // Log as object for readability
+
+        // Assign the final JavaScript Map back to the Mongoose document field
+        refrigerator.foodMap = mergedMap;
+
+        // Save the updated refrigerator
         await refrigerator.save();
 
+        // Respond with the updated foodMap (convert back to Object for JSON)
         res.status(200).json({
-            message: "Food map updated successfully", foodMap: newFoodMap});
-
+            message: 'Food map updated successfully',
+            foodMap: Object.fromEntries(mergedMap) // Convert Map to Object for JSON response
+        });
 
     } catch (error) {
-        res.status(500).json({ error: err.message})
+        console.error('Error updating foodMap:', error);
+        // Check specifically for validation errors vs other errors
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ error: error.message });
+        }
+        res.status(500).json({ error: 'Internal server error while updating food map.' }); // Use 500 for server errors
     }
 });
+
 
 export default router;
