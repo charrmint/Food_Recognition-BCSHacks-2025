@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, Container, Heading, Input, Button, useToast, VStack, useColorModeValue } from '@chakra-ui/react';
+import axios from 'axios';
 
 const UserPage = () => {
     const [userDetails, setUserDetails] = useState({
@@ -34,39 +35,57 @@ const UserPage = () => {
 
         try {
             // Send POST request to backend
-            const response = await fetch("/api/user/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(userDetails),
+            const response = await axios.post("http://localhost:5050/api/user/", {
+                name, 
+                email, 
+                password, 
+                refrigeratorId
             });
 
-            const data = await response.json();
-
-            if (data.success) {
+            if (response.status === 201) {
                 toast({
-                    title: "Success",
-                    description: data.message,
-                    status: "success",
+                    title: 'Success',
+                    description: 'User added successfully.',
+                    status: 'success',
                     isClosable: true,
                 });
-                setUserDetails({ name: "", email: "", password: "", refrigeratorId: "" }); // reset form fields
+             
+            
+                // Reset form after success
+                setUserDetails({ 
+                    name: '', 
+                    email: '',
+                    password: '',
+                    refrigeratorId: '' 
+                });
             } else {
                 toast({
-                    title: "Error",
-                    description: data.message,
-                    status: "error",
+                    title: 'Error',
+                    description: `Failed to add user. Status: ${response.status}`,
+                    status: 'error',
                     isClosable: true,
                 });
             }
         } catch (error) {
-            toast({
-                title: "Error",
-                description: "There was an error creating the user.",
-                status: "error",
-                isClosable: true,
-            });
+            console.error('Error adding user:', error);
+            
+            // Log error details for better debugging
+            if (error.response) {
+                console.error('Error response:', error.response);
+                toast({
+                    title: 'Error',
+                    description: `API Error: ${error.response.data.error}`,
+                    status: 'error',
+                    isClosable: true,
+                });
+            } else {
+                toast({
+                    title: 'Error',
+                    description: 'Something went wrong.',
+                    status: 'error',
+                    isClosable: true,
+                });
+            }
         }
     };
 
