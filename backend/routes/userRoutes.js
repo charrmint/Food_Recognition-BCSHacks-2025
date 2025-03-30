@@ -25,16 +25,15 @@ router.post("/", async (req, res) => {
         const newUser = new User({name, email, password, refrigerator: refrigeratorId});
         await newUser.save();
 
+        const fridge = await Refrigerator.findById(refrigeratorId);
+        fridge.userList.push(newUser);
+        await fridge.save();
+
         res.status(201).json({
             success: true,
             message: 'User created successfully',
             user: newUser
         });
-
-        const frige = await Refrigerator.findById(refrigeratorId);
-        frige.userList.push(newUser);
-        await frige.save();
-
     } catch (error) {
         console.error("Error in Create product:", error.message);
         res.status(500).json({success: false, message: "Server Error" });
