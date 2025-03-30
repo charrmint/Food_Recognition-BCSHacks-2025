@@ -54,7 +54,7 @@ const RemovePage = () => {
         }
 
         try {
-            const response = await axios.delete(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/removeFoods`, { foodName, quantity });
+            const response = await axios.delete(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/removeFoods`, {data: { foodName, quantity }});
 
             if (response.status === 200) {
                 toast({
@@ -64,19 +64,13 @@ const RemovePage = () => {
                     isClosable: true,
                 });
 
-                // Update the food map
-                const updatedFoodMap = new Map(foodMap);
-                const currentQuantity = parseInt(updatedFoodMap.get(foodName), 10);
-                
-                if (currentQuantity <= quantity) {
-                    updatedFoodMap.delete(foodName);
-                } else {
-                    updatedFoodMap.set(foodName, (currentQuantity - quantity).toString());
-                }
+                // Reset form after success
+                setNewFood({ foodName: '', quantity: '' });
 
+                // Re-fetch the foodMap after adding a new food
+                const updatedFoodMap = new Map(foodMap);
+                updatedFoodMap.set(foodName, quantity); // Add the new food to the Map
                 setFoodMap(updatedFoodMap);
-                setFoodName('');
-                setQuantity('');
             } else {
                 toast({
                     title: 'Error',
