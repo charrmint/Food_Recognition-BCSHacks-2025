@@ -35,8 +35,6 @@ router.post("/", async (req, res) => {
         frige.userList.push(newUser);
         await frige.save();
 
-
-
     } catch (error) {
         console.error("Error in Create product:", error.message);
         res.status(500).json({success: false, message: "Server Error" });

@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import foodRoutes from './routes/foodRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import refrigeratorRoutes from './routes/refrigeratorRoutes.js'
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ try {
         // Routes
         app.use('/api/food', foodRoutes);
         app.use('/api/user', userRoutes);
+        app.use('/api/refrigerator', refrigeratorRoutes);
 
         // Server Listening
 

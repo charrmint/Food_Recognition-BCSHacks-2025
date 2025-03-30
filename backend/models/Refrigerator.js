@@ -12,10 +12,10 @@ const RefrigeratorSchema = new mongoose.Schema({
         ref: 'Food'
     }], pastImage: {
         type: String,
-        required: true
+        required: false
     }, currentImage: {
         type: String,
-        required: true
+        required: false
     }
 });
 

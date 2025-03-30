@@ -3,7 +3,7 @@ import Refrigerator from '../models/Refrigerator.js';
 import User from '../models/User.js';
 import Food from '../models/Food.js'
 
-const router = express.router();
+const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
