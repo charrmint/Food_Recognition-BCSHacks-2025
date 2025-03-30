@@ -68,22 +68,43 @@ router.put('/:id/removeUser', async (req, res) => {
 });
 
 // remove foods
-router.put('/:id/removeFoods', async (req, res) => {
+router.delete('/:id/removeFoods', async (req, res) => {
     try {
-        const { foodIds } = req.body;
+        const { foodName, quantity } = req.body;
         const { id } = req.params;
 
         const refrigerator = await Refrigerator.findById(id);
+
+        if (!foodName || !quantity) {
+            return res.status(400).json({ message: 'Food name and quantity are required' });
+        }
 
         if (!refrigerator) {
             return res.status(404).json({ message: 'Refrigerator not found' });
         }
 
-        refrigerator.foodList = refrigerator.foodList.filter(food => !foodIds.includes(food.toString()));
+        if (!refrigerator.foodMap.has(foodName)) {
+            return res.status(404).json({ message: 'Food not found in refrigerator' });
+        }
+
+        const quantityToDelete = parseInt(quantity, 10);
+
+        if (isNaN(quantityToDelete) || quantityToDelete <= 0) {
+            return res.status(400).json({ message: 'Invalid quantity value' });
+        }
+
+        const currentFood = refrigerator.foodMap.get(foodName);
+
+        if (currentFood.quantity <= quantityToDelete) {
+            refrigerator.foodMap.delete(foodName);
+        } else {
+            currentFood.quantity -= quantityToDelete;
+            refrigerator.foodMap.set(foodName, currentFood);
+        }
 
         await refrigerator.save();
 
-        res.status(200).json({ message: 'Foods removed succesfully', refrigerator });
+        res.status(200).json({ message: `${quantityToDelete} of ${foodName} removed successfully`, refrigerator });
     } catch(err) {
         res.status(400).json({ error: err.message });
     }
@@ -91,10 +112,12 @@ router.put('/:id/removeFoods', async (req, res) => {
 
 )
 
-router.post('/addFood', async (req, res) => {
+router.post('/:id/addFood', async (req, res) => {
     try {
-        const { foodName, quantity, refrigeratorID} = req.body;
-        if (!foodName || !quantity || !refrigeratorID) {
+        const { foodName, quantity} = req.body;
+        const { refrigeratorID } = req.params;
+        
+        if (!foodName || !quantity ) {
             return res.status(400).json({
                 error: 'All fields are required'
             });
