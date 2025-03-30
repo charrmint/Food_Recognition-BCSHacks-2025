@@ -31,17 +31,18 @@ router.post('/', async (req, res) => {
             refrigerator: refrigeratorId,
         });
 
-        // save food
+        // save user
         await newUser.save();
 
         // add food to refrigerator
         refrigerator.userList.push(newUser._id);
         await refrigerator.save();
 
-        res.status(201).json(newFood);
+        res.status(201).json(newUser);
     } catch (err) {
         res.status(400).json({ error: err.message});
     }
+});
 
 router.get('/:id', async (req, res) => {
     try {
@@ -57,7 +58,7 @@ router.get('/:id', async (req, res) => {
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
-    });
 });
+
 
 export default router;
