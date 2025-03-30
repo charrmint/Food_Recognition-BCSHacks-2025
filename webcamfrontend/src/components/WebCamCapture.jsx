@@ -2,7 +2,10 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import {Box, Button, VStack, HStack, Image} from '@chakra-ui/react';
 
-const foodData = ['Banana', 'Apple', 'Pizza', 'Milk', 'Egg', 'Cookie', 'Strawberry',]
+const foodData = ['Banana', 'Apple', 'Pizza', 'Milk', 'Egg',
+                'Cookie', 'Strawberry', 'Orange', 'Chocolate', 'Bread',
+                'Carrot', 'Broccoli', 'Grapes', 'Tomato', 'Avocado',
+                'Electronic Device', 'Lemon', 'Rice', 'Chocolate Bar']
 
 const videoConstraints = {
     width: 1280,
@@ -122,15 +125,25 @@ const WebCamCapture = () => {
     };
 
     const processDetailedFoodResults = (data) => {
+        let processedData = [];
         console.log("Raw API Response:", data);
         if (data.responses && data.responses[0] && data.responses[0].labelAnnotations) {
+            let processedData = [];
             const labels = data.responses[0].labelAnnotations.map(label => label.description);
-            console.log("Detected Labels: labels");
+            for (let i = 0; i < labels.length; i++) {
+                for (let j = 0; j < foodData.length; j++) {
+                    if (labels[i] == foodData[j]) {
+                        processedData.push(labels[i]);
+                    }
+                }
+            }
+            console.log("Detected Labels:", labels);
+            console.log("Filtered labels", processedData);
         }
         if (data.responses && data.responses[0] && data.responses[0].webDetection) {
             console.log("Web Detection:", data.responses[0].webDetection);
         }
-        return data;
+        return processedData;
     }
 
     useEffect(() => {
