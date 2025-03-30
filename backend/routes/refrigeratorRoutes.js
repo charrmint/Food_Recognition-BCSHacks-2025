@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // remove user
-router.remUser('/:id/removeUser', async (req, res) => {
+router.put('/:id/removeUser', async (req, res) => {
     try {
         const { userId } = req.body;
         const { id } = req.params;
@@ -69,7 +69,7 @@ router.remUser('/:id/removeUser', async (req, res) => {
 });
 
 // remove foods
-router.remFoods('/:id/removeFoods', async (req, res) => {
+router.put('/:id/removeFoods', async (req, res) => {
     try {
         const { foodIds } = req.body;
         const { id } = req.params;
