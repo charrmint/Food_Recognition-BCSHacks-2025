@@ -27,7 +27,7 @@ try {
 
         // Routes
         app.use('/api/food', foodRoutes);
-        app.use('api/user', userRoutes);
+        app.use('/api/user', userRoutes);
 
         // Server Listening
 
