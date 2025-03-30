@@ -10,7 +10,8 @@ const RefrigeratorSchema = new mongoose.Schema({
     }], foodMap: {
         type: Map,
         of: {
-            quantity: { type: Number, required: true }
+            quantity: { type: Number, required: true },
+            location: {type: String, enum: ['inside', 'outside'], required: false, default: "inside"}
         },
         required: false,
         default: {},
