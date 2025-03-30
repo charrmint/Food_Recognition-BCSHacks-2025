@@ -7,25 +7,25 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     try {
         // get user input
-        const { name, refrigeratorID } = req.body;
+        const { name, refrigeratorId } = req.body;
 
         // check if all fields are filled
-        if (!name || !refrigeratorID ) {
+        if (name || !refrigeratorId ) {
             return res.status(400).json({
                 error: 'All fields are required'
             });
         }    
 
         // find refrigerator
-        const refrigerator = await Refrigerator.findById(refrigeratorID);
+        const refrigerator = await Refrigerator.findById(refrigeratorId);
         if (!refrigerator) {
             return res.status(404).json({ message: 'Refrigerator not found'});
         }
 
         // create new food from input
         const newFood = new Food({ 
-            name, 
-            refrigerator: refrigeratorID,
+            name: name, 
+            refrigerator: refrigeratorId,
         });
 
         // save food

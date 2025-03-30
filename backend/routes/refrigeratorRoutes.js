@@ -7,15 +7,14 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const { name, userIds, foodIds, currentImage, pastImage } = req.body;
+        const { name, userIds, foodMap, currentImage, pastImage } = req.body;
 
         const users = await User.find({ '_id': { $in: userIds } });
-        const foods = await Food.find({ '_id': { $in: foodIds } });
 
         const refrigerator = new Refrigerator({
             name,
             userList: users.map(user => user._id),
-            foodList: foods.map(food => food._id),
+            foodMap: foodMap,
             currentImage,
             pastImage
         });
@@ -58,7 +57,7 @@ router.put('/:id/removeUser', async (req, res) => {
             return res.status(404).json({ message: 'Refrigerator not found' });
         }
 
-        refrigerator.users = refrigerator.users.filter(user => user.toString() !== userId);
+        refrigerator.userList = refrigerator.userList.filter(user => user.toString() !== userId);
 
         await refrigerator.save();
 
@@ -69,27 +68,92 @@ router.put('/:id/removeUser', async (req, res) => {
 });
 
 // remove foods
-router.put('/:id/removeFoods', async (req, res) => {
+router.delete('/:id/removeFoods', async (req, res) => {
     try {
-        const { foodIds } = req.body;
+        const { foodName, quantity } = req.body;
         const { id } = req.params;
 
         const refrigerator = await Refrigerator.findById(id);
+
+        if (!foodName || !quantity) {
+            return res.status(400).json({ message: 'Food name and quantity are required' });
+        }
 
         if (!refrigerator) {
             return res.status(404).json({ message: 'Refrigerator not found' });
         }
 
-        refrigerator.foodList = refrigerator.foodList.filter(food => !foodIds.includes(food.toString()));
+        if (!refrigerator.foodMap.has(foodName)) {
+            return res.status(404).json({ message: 'Food not found in refrigerator' });
+        }
+
+        const quantityToDelete = parseInt(quantity, 10);
+
+        if (isNaN(quantityToDelete) || quantityToDelete <= 0) {
+            return res.status(400).json({ message: 'Invalid quantity value' });
+        }
+
+        const currentFood = refrigerator.foodMap.get(foodName);
+
+        if (currentFood.quantity <= quantityToDelete) {
+            refrigerator.foodMap.delete(foodName);
+        } else {
+            currentFood.quantity -= quantityToDelete;
+            refrigerator.foodMap.set(foodName, currentFood);
+        }
 
         await refrigerator.save();
 
-        res.status(200).json({ message: 'Foods removed succesfully', refrigerator });
+        res.status(200).json({ message: `${quantityToDelete} of ${foodName} removed successfully`, refrigerator });
     } catch(err) {
         res.status(400).json({ error: err.message });
     }
 }
 
 )
+
+router.post('/:id/addFood', async (req, res) => {
+    try {
+        const { foodName, quantity} = req.body;
+        const { id } = req.params;
+
+        if (!foodName || !quantity ) {
+            return res.status(400).json({
+                error: 'All fields are required'
+            });
+        }
+
+        // Find the refrigerator by ID
+        const refrigerator = await Refrigerator.findById(id);
+        if (!refrigerator) {
+            return res.status(404).json ({
+                message: "Refrigerator not found"
+            });
+        }
+
+        // Update the foods map with the new food item and its quantity
+        // If the food already exists, update the quantity
+        if (refrigerator.foodMap.has(foodName)) {
+            refrigerator.foodMap.set(foodName, {
+                quantity: refrigerator.foodMap.get(foodName).quantity + quantity,
+            });
+        } else {
+            refrigerator.foodMap.set(foodName, {
+                quantity
+            });
+        }
+
+        // Save the updated refrigerator document
+        await refrigerator.save();
+        res.status(201).json({
+            message: "Food added successfully", refrigerator
+        });
+    } catch (error) {
+        res.status(400).json({
+            error: error.message
+        });
+    }
+
+});
 
 export default router;

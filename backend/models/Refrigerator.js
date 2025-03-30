@@ -7,10 +7,14 @@ const RefrigeratorSchema = new mongoose.Schema({
     }, userList: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }], foodList: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Food'
-    }], pastImage: {
+    }], foodMap: {
+        type: Map,
+        of: {
+            quantity: { type: Number, required: true }
+        },
+        required: false,
+        default: {},
+    }, pastImage: {
         type: String,
         required: false
     }, currentImage: {

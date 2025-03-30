@@ -27,7 +27,7 @@ try {
         console.log(`MongoDB Connected:`, process.env.MONGO_URI);
 
         // Routes
-        app.use('/api/food', foodRoutes);
+        // app.use('/api/food', foodRoutes);
         app.use('/api/user', userRoutes);
         app.use('/api/refrigerator', refrigeratorRoutes);
 
