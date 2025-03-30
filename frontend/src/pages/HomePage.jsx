@@ -5,11 +5,11 @@ import { useFoodStore } from '../store/food';
 import FoodCard from '../components/FoodCard';
 
 const HomePage = () => {
-  const {fetchFood, foods} = useFoodStore();
+  const {fetchFood, foodList} = useFoodStore();
 
   useEffect(() => {
     fetchFood();
-  }, [fetchFood]);
+}, [fetchFood, foodList]);
 
 
   return (
@@ -34,8 +34,8 @@ const HomePage = () => {
           spacing={1}
           w="400px"
         >
-          {foods.length > 0 ? (
-                        foods.map((food) => (
+          {foodList.length > 0 ? (
+                        foodList.map((food) => (
                             <FoodCard key={food._id} food={food} />
                         ))
                     ) : (
