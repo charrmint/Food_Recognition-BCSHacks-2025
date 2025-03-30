@@ -184,16 +184,17 @@ router.post('/:id/updateFoodMap', async (req, res) => {
         const refrigerator = await Refrigerator.findById(req.params.id);
 
         if (!refrigerator) {
-            return res.status(404).json({ message: 'Refrigerator not found '})
+            return res.status(404).json({ error: 'Refrigerator not found '})
         }
 
         const {insideFood} = req.body; // array of "inside" food
 
         // remove "inside" food
-        const updateFoodMap = Object.entries(refrigerator.foodMap).filter(
-            ([foodName])=>!insideFood.includes(foodName));
+        const updateFoodMap = Object.fromEntries(Object.entries(refrigerator.foodMap).filter
+            (([foodName, location]) => location !== 'inside'));
 
-        const newFoodMap = new Map(updateFoodMap);
+        const mergedFoodMap = { ...insideFood, ...updateFoodMap };
+        const newFoodMap = new Map(mergedFoodMap);
 
         refrigerator.foodMap = newFoodMap;
 
