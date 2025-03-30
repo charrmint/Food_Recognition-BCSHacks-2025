@@ -61,7 +61,7 @@ const CreatePage = () => {
         <Container maxW="container.sm">
             <VStack spacing={12}>
                 <Heading as="h1" size="2xl" textAlign="center" mb={8}>
-                    Add new food
+                    Add food(s)
                 </Heading>
 
                 <Box

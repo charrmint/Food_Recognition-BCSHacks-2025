@@ -128,7 +128,6 @@ const WebCamCapture = () => {
         let processedData = [];
         console.log("Raw API Response:", data);
         if (data.responses && data.responses[0] && data.responses[0].labelAnnotations) {
-            let processedData = [];
             const labels = data.responses[0].labelAnnotations.map(label => label.description);
             for (let i = 0; i < labels.length; i++) {
                 for (let j = 0; j < foodData.length; j++) {

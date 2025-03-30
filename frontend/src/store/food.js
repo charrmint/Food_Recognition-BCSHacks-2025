@@ -104,6 +104,7 @@ export const useFoodStore = create((set) => ({
                 name,
                 quantity: data.quantity
             }));
+            console.log("Foodlist:", foodList);
             
             set({ foodList });
         } catch (error) {

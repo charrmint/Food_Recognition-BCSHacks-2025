@@ -14,7 +14,7 @@ const foodIconMap = {
   //takes in food object, from backend, which has name and quantity
 const FoodCard = ({food}) => {
 
-    const foodIcon = foodIconMap[food.name.toLowerCase()] || null;
+    const foodIcon = foodIconMap[food.name.toLowerCase()] || foodIconMap["default"];
     //null if none of three
   return (
     <Box

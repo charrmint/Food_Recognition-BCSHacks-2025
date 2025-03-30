@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { Route, Routes } from 'react-router-dom';
 import CreatePage from './pages/CreatePage';
+import AskPage from './pages/AskPage';
 import HomePage from './pages/HomePage';
 import UserPage from './pages/UserPage';
 import RemovePage from './pages/RemovePage';
@@ -19,6 +20,7 @@ function App() {
             <Route path="/user" element={<UserPage />} />
             <Route path= "/" element={<HomePage />}/>
             <Route path= "/addFood" element={<CreatePage />}/>
+            <Route path= "/AskPage" element={<AskPage />}/>
             <Route path= "/removeFood" element={<RemovePage />}/>
         </Routes>
       </Box>

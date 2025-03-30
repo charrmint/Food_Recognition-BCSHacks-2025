@@ -3,6 +3,7 @@ import { Button, Container, Flex, HStack, Text, useColorMode } from "@chakra-ui/
 import { Link } from "react-router-dom";
 import { MinusIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import { MdSettings } from "react-icons/md"
+import { LuSearch } from "react-icons/lu"
 import { LuSun } from "react-icons/lu";
 import { IoMoon } from "react-icons/io5";
 
@@ -48,6 +49,14 @@ const Navbar = () => {
               <MdSettings fontSize={20} />
             </Button>
           </Link>
+
+          <Link to={"/AskPage"}>
+            <Button>
+              <LuSearch fontSize={20} />
+            </Button>
+          </Link>
+
+
           <Button onClick={toggleColorMode}>
             {colorMode === "light" ? <IoMoon size='20' /> : <LuSun size='20' />}
           </Button>
