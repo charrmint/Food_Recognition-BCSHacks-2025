@@ -18,7 +18,6 @@ const CreatePage = () => {
             try {
                 const response = await axios.get(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/foodMap`);
                 const foodData = response.data.foodMap;
-
                 const map = new Map(Object.entries(foodData));
                 setFoodMap(map);
             } catch (error) {

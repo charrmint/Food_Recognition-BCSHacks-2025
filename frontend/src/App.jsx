@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import CreatePage from './pages/CreatePage';
 import HomePage from './pages/HomePage';
 import UserPage from './pages/UserPage';
+import RemovePage from './pages/RemovePage';
 import Navbar from './components/Navbar';
 import { useFoodStore } from './store/food';
 import { useColorModeValue } from '@chakra-ui/react';
@@ -17,7 +18,8 @@ function App() {
           <Routes>
             <Route path="/user" element={<UserPage />} />
             <Route path= "/" element={<HomePage />}/>
-            <Route path= "/create" element={<CreatePage />}/>
+            <Route path= "/addFood" element={<CreatePage />}/>
+            <Route path= "/removeFood" element={<RemovePage />}/>
         </Routes>
       </Box>
     </>

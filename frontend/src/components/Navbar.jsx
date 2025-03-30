@@ -1,7 +1,7 @@
 import { chakra, useClipboard, useColorModeValue } from "@chakra-ui/react";
 import { Button, Container, Flex, HStack, Text, useColorMode } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import { MinusIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import { MdSettings } from "react-icons/md"
 import { LuSun } from "react-icons/lu";
 import { IoMoon } from "react-icons/io5";
@@ -31,9 +31,15 @@ const Navbar = () => {
         <HStack spacing ={2} alignItems={"center"}>
         
 
-          <Link to = {"/create"}>
+          <Link to = {"/addFood"}>
           <Button>
             <PlusSquareIcon fontSize={20} />
+          </Button>
+          </Link>
+
+          <Link to = {"/removeFood"}>
+          <Button>
+            <MinusIcon fontSize={20} />
           </Button>
           </Link>
 

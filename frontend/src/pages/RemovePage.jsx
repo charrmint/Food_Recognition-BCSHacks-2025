@@ -5,11 +5,13 @@ import axios from 'axios';
 
 //needs to interact with backend to be able to addFoods
 const RemovePage = () => {
-    const [foodName, setFoodName] = useState("");
-    const [quantity, setQuantity] = useState("");
+    const [newFood, setNewFood] = useState({
+        foodName: "",
+        quantity: "",
+    });
+
     const [foodMap, setFoodMap] = useState(new Map());
     const toast = useToast();
-    const refrigeratorId = "67e8d93a1f1d440ffc1093c7";
 
     useEffect(() => {
         const fetchFoodMap = async () => {
@@ -27,6 +29,10 @@ const RemovePage = () => {
     }, []);
 
     const handleRemoveFood = async () => {
+        const { foodName, quantity } = newFood;
+
+        console.log("Removing food:", newFood);
+
         if (!foodName || !quantity) {
             toast({
                 title: 'Error',
@@ -48,7 +54,7 @@ const RemovePage = () => {
         }
 
         try {
-            const response = await axios.delete(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/removeFood`, { foodName, quantity });
+            const response = await axios.delete(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/removeFoods`, { foodName, quantity });
 
             if (response.status === 200) {
                 toast({
@@ -102,7 +108,42 @@ const RemovePage = () => {
         }
     };
 
+    return (
+        <Container maxW="container.sm">
+            <VStack spacing={12}>
+                <Heading as="h1" size="2xl" textAlign="center" mb={8}>
+                    Remove food
+                </Heading>
+
+                <Box
+                    w="300px" bg={useColorModeValue("white", "gray.800")}
+                    p={6} rounded={"lg"} shadow={"md"}
+                >
+                    <VStack spacing={10}>
+                        <Input
+                            placeholder='Food name'
+                            value={newFood.foodName}
+                            onChange={(e) => setNewFood({ ...newFood, foodName: e.target.value })}
+                        />
+                        <Input
+                            placeholder='Quantity' 
+                            type='number'
+                            value={newFood.quantity}
+                            onChange={(e) => setNewFood({ ...newFood, quantity: e.target.value })}
+                        />
+
+                        <Button type="button" colorScheme="blue" onClick={() =>{
+                            console.log('Button clicked');
+                            handleRemoveFood();
+                        }} w="full">
+                            Remove Food
+                        </Button>
+                    </VStack>
+                </Box>
+            </VStack>
+        </Container>
+    );
     
 };
 
-export default RemoveFoodsPage;
+export default RemovePage;
