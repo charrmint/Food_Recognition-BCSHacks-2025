@@ -1,6 +1,7 @@
 import {Box, Container, Heading, useColorModeValue, useToast, VStack, Input, Button} from '@chakra-ui/react';
 import {useState} from 'react';
 import {useFoodStore} from '../store/food';
+let refrigerator_id_here = 1;
 
 //needs to interact with backend to be able to addFoods
 const CreatePage = () => {
@@ -14,45 +15,65 @@ const CreatePage = () => {
     const { createFood }=useFoodStore()
 
     const handleAddFood = async() => {
-        const { success,message } = await createFood(newFood);
-            if (!success) {
-                toast ({
-                title:"error",
-                description: message,
-                status:"error",
-                isClosable: true,
+        const { name, quantity } = newFood;
+        //const { success,message } = await createFood(newFood);
+            
+        //send a POST request to backend
+        try {
+            const res = await fetch('/api/foods', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    refrigeratorID: refrigerator_id_here,  // hardcode our fridge ID
+                    quantity,
+                }),
             });
-            } else {
-                toast ({
-                    title:"success",
-                    description: message,
-                    status:"success",
-                    isClosable: true,
-                });
-            }
-            setNewFood({name: "", quantity: ""});
-        };
+        
+        const data = await res.json();
+        
+        toast ({
+            title:"success",
+            description: data.message,
+            status:"success",
+            isClosable: true,
+        });
+        
+        //reset
+        setNewFood({name: "", quantity: ""});
+
+    } catch (error) {
+        toast ({
+            title:"error",
+            description: error.message,
+            status:"error",
+            isClosable: true,
+        });
+    }
+    };
     return (
     <Container maxW= "container.sm">
-        <VStack spacing={8}>
+        <VStack spacing={2}>
             <Heading as="h1" size="2xl" textAlign="center" mb={8}>
                 Create new food
             </Heading>
 
             <Box
-                    w="full" bg={useColorModeValue("white", "gray.800")}
+                    w="100px" bg={useColorModeValue("white", "gray.800")}
                     p={6} rounded={"lg"} shadow={"md"}
                 >
-                    <VStack spacing={4}>
+                    <VStack spacing={2}>
                         <Input
                         placeholder='Food name'
-                        name='Food name'
+                        //name='Food name'
                         value={newFood.name}
                         onChange={(e) => setNewFood({ ...newFood, name: e.target.value})}
                         />
                         <Input
                         placeholder='Quantity'
-                        name='quantity'
+                        //name='quantity'
                         type='number'
                         value={newFood.quantity}
                         onChange={(e) => setNewFood({ ...newFood, quantity: e.target.value})}
