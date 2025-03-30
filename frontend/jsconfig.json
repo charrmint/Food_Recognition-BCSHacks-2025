@@ -7,5 +7,10 @@
       "paths": {
         "@/*": ["./src/*"]
       }
-    }
+    },
+    "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.txt"  // exclue txt files
+  ]
   }

@@ -11,7 +11,6 @@ const HomePage = () => {
     fetchFood();
   }, [fetchFood]);
 
-  //console.log("foods",foods);
 
   return (
     <Container maxW='container.xl' py={12}>
@@ -32,8 +31,8 @@ const HomePage = () => {
             md: 2,
             lg: 3
           }}
-          spacing={10}
-          w="full"
+          spacing={1}
+          w="400px"
         >
           {foods.length > 0 ? (
                         foods.map((food) => (
