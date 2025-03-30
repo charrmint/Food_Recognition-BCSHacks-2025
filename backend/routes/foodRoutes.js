@@ -39,6 +39,7 @@ router.post('/', async (req, res) => {
     } catch (err) {
         res.status(400).json({ error: err.message});
     }
+});
 
 router.get('/:id', async (req, res) => {
     try {
@@ -50,7 +51,6 @@ router.get('/:id', async (req, res) => {
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
-    });
 });
 
 export default router;
