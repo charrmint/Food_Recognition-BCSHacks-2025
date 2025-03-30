@@ -7,7 +7,8 @@ import axios from 'axios';
 const foodData = ['Banana', 'Apple', 'Pizza', 'Milk', 'Egg',
                 'Cookie', 'Strawberry', 'Orange', 'Bread',
                 'Carrot', 'Broccoli', 'Grapes', 'Tomato', 'Avocado',
-                'Electronic Device', 'Lemon', 'Rice', 'Chocolate Bar']
+                'Electronic Device', 'Lemon', 'Rice', 'Chocolate Bar', 
+                'Eggplant', 'Wine', 'Onion', 'Cupcake']
 
 const videoConstraints = {
     width: 1280,

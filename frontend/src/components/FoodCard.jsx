@@ -1,13 +1,17 @@
 import {Box, Heading, Text, Flex} from '@chakra-ui/react';
-import {FaAppleAlt, FaCarrot } from 'react-icons/fa'; 
-import {GiBananaBunch, GiCakeSlice } from 'react-icons/gi'; 
+import {FaAppleAlt, FaCarrot, FaWineBottle } from 'react-icons/fa'; 
+import {GiBananaBunch, GiCakeSlice, GiOrange, GiCupcake } from 'react-icons/gi'; 
+import {LuBanana} from 'react-icons/lu';
 
 const foodIconMap = {
     //water: <FaBottleWater size={50} />,
     apple: <FaAppleAlt size={50} color="red"/>,
     carrot: <FaCarrot size={50} color="orange"/>,
-    bananas: <GiBananaBunch size={50} color="yellow"/>,
+    banana: <LuBanana size={50} color="yellow"/>,
     cake: <GiCakeSlice size={50} color="white"/>,
+    wine: <FaWineBottle size={50} color="red"/>,
+    orange: <GiOrange size={50} color="orange" />,
+    cupcake: <GiCupcake size={50} color="brown" />,
     default: <FaAppleAlt size={50} color="gray" />,
   };
 
