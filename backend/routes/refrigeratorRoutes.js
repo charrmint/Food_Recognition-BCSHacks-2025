@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const refrigerator = await Refrigerator.findById(req.params.id)
-        .populate('users')
-        .populate('foods');
+        .populate('userList')
+        .populate('foodList');
 
         if (!refrigerator) {
             return res.status(404).json({ message: 'Refrigerator not found'});
