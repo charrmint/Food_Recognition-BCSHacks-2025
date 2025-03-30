@@ -1,9 +1,11 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import {Box, Button, VStack, HStack, Image} from '@chakra-ui/react';
+import axios from 'axios';
+
 
 const foodData = ['Banana', 'Apple', 'Pizza', 'Milk', 'Egg',
-                'Cookie', 'Strawberry', 'Orange', 'Chocolate', 'Bread',
+                'Cookie', 'Strawberry', 'Orange', 'Bread',
                 'Carrot', 'Broccoli', 'Grapes', 'Tomato', 'Avocado',
                 'Electronic Device', 'Lemon', 'Rice', 'Chocolate Bar']
 
@@ -32,7 +34,7 @@ const WebCamCapture = () => {
         // const sendToApi = async () => {
         //     try {
         //         const response = await fetch('AHHHHH', {
-        //             method: 'POST',
+        //             method: 'POST',~
         //             headers: {
         //                 'Content-Type': 'image/jpeg',
         //             },
@@ -116,8 +118,53 @@ const WebCamCapture = () => {
 
             const data = await response.json();
             console.log('Success', data);
+            
+            // const fridgeArray = processDetailedFoodResults(data);
+            // const inputFoodObject = new Map(fridgeArray.map(item => [item, 1, null, "inside"]));
+            const fridgeArray = processDetailedFoodResults(data);
 
-            return processDetailedFoodResults(data);
+            // 1. Create a Map with the CORRECT value structure (Object, not Array)
+            //    And use keys/values appropriate for the backend schema
+            const mapForConversion = new Map(fridgeArray.map(foodName => {
+                const key = foodName;
+                const value = { // Use an object structure matching your backend schema
+                    quantity: 1,        // Assuming default quantity 1
+                    location: "inside"
+                    // Note: No need to send 'null' for the ID placeholder to the backend.
+                    // The backend schema/logic handles ID creation or updates.
+                };
+            return [key, value];
+            }));
+
+            // 2. Convert the Map to a plain JavaScript Object suitable for JSON
+            const foodMapPayload = Object.fromEntries(mapForConversion);
+
+            try {
+                const response1 = await axios.post("http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/updateFoodMap", {
+                foodMap: foodMapPayload
+            });
+            
+        } catch (error) {
+            console.error('Error adding user:', error);
+            
+            // Log error details for better debugging
+            if (error.response) {
+                console.error('Error response:', error.response);
+                toast({
+                    title: 'Error',
+                    description: `API Error: ${error.response.data.error}`,
+                    status: 'error',
+                    isClosable: true,
+                });
+            } else {
+                toast({
+                    title: 'Error',
+                    description: 'Something went wrong.',
+                    status: 'error',
+                    isClosable: true,
+                });
+            }
+        }
         } catch(error) {
             console.error('Error with food recognition:', error);
             return null;

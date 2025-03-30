@@ -60,7 +60,7 @@ export const useFoodStore = create((set) => ({
                 //     const createResult = await useFoodStore.getState().createRefrigerator();
                 //     if (!createResult.success) {
                 //         return { success: false, message: "Failed to create refrigerator" };
-                //     }
+                //     } 
                 //     // Retry adding food with the new refrigerator ID
                 //     return await useFoodStore.getState().createFood(newFood);
                 // }
