@@ -55,15 +55,15 @@ export const useFoodStore = create((set) => ({
             console.log("Server response:", data);
             
             if (!res.ok) {
-                if (res.status === 404) {
-                    // If refrigerator not found, try to create one
-                    const createResult = await useFoodStore.getState().createRefrigerator();
-                    if (!createResult.success) {
-                        return { success: false, message: "Failed to create refrigerator" };
-                    }
-                    // Retry adding food with the new refrigerator ID
-                    return await useFoodStore.getState().createFood(newFood);
-                }
+                // if (res.status === 404) {
+                //     // If refrigerator not found, try to create one
+                //     const createResult = await useFoodStore.getState().createRefrigerator();
+                //     if (!createResult.success) {
+                //         return { success: false, message: "Failed to create refrigerator" };
+                //     }
+                //     // Retry adding food with the new refrigerator ID
+                //     return await useFoodStore.getState().createFood(newFood);
+                // }
                 return {success: false, message: data.error || data.message || "Failed to add food"};
             }
             
