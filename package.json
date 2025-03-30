@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/VW21/Food_Recognition-BCSHacks-2025#readme",
   "dependencies": {
+    "@chakra-ui/react": "^3.15.0",
+    "@emotion/react": "^11.14.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
