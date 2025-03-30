@@ -14,7 +14,7 @@ export const useFoodStore = create((set) => ({
         if (!newFood.name || !newFood.quantity) {
             return {success:false, message:"Please give food name (water, apple, carrot)."}
         }
-        const res = await fetch("/api/food", {
+        const res = await fetch("/api/refrigerator", {
             method:"POST",
             headers:{
                 "Content-Type":"application/json",
@@ -23,7 +23,7 @@ export const useFoodStore = create((set) => ({
         }); //huh do not understand this part
         const data= await res.json();
         //interacts w back end
-        const updatedRes = await fetch("/api/food");
+        const updatedRes = await fetch("/api/refrigerator");
         const updatedData = await updatedRes.json();
     
         set({ foodList: updatedData.data });
@@ -31,7 +31,7 @@ export const useFoodStore = create((set) => ({
         return { success: true, message: "Food made successfully." };
     },
     fetchFood: async () => {
-        const res = await fetch("/api/food");
+        const res = await fetch("/api/refrigerator");
         const data = await res.json();
         set({ foodList: data.data });
     }

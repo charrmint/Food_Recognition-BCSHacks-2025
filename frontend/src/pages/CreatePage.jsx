@@ -17,7 +17,7 @@ const CreatePage = () => {
     
     useEffect(() => {
         fetchFood();
-    }, [fetchFood, foodList]);
+    }, [fetchFood]);
 
     const handleAddFood = async() => {
         //const { name, quantity } = newFood;
