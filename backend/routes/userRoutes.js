@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
         }
 
         // create new food from input
-        const newUser = new Food({ 
+        const newUser = new User({ 
             name,
             email,
             password, 
