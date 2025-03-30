@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
         // create new food from input
         const newFood = new Food({ 
             name, 
-            refrigerator: refrigeratorID
+            refrigerator: refrigeratorID,
         });
 
         // save food
