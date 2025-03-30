@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, Container, Heading, Input, Button, useToast, VStack, useColorModeValue } from '@chakra-ui/react';
+//import axios from 'axios';
 
 const UserPage = () => {
     const [userDetails, setUserDetails] = useState({

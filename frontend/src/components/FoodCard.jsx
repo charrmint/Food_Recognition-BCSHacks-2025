@@ -8,6 +8,7 @@ const foodIconMap = {
     carrot: <FaCarrot size={50} color="orange"/>,
     bananas: <GiBananaBunch size={50} color="yellow"/>,
     cake: <GiCakeSlice size={50} color="white"/>,
+    default: <FaAppleAlt size={50} color="gray" />,
   };
 
   //takes in food object, from backend, which has name and quantity
