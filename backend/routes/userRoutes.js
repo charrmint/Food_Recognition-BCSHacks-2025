@@ -8,17 +8,17 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     try {
         // get user input
-        const { name, email, password, refrigeratorID } = req.body;
+        const { name, email, password, refrigeratorId } = req.body;
 
         // check if all fields are filled
-        if (!name || !email || !password || !refrigeratorID ) {
+        if (!name || !email || !password || !refrigeratorId ) {
             return res.status(400).json({
                 error: 'All fields are required'
             });
         }    
 
         // find refrigerator
-        const refrigerator = await Refrigerator.findById(refrigeratorID);
+        const refrigerator = await Refrigerator.findById(refrigeratorId);
         if (!refrigerator) {
             return res.status(404).json({ message: 'Refrigerator not found'});
         }
@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
             name,
             email,
             password, 
-            refrigerator: refrigeratorID,
+            refrigerator: refrigeratorId,
         });
 
         // save food
