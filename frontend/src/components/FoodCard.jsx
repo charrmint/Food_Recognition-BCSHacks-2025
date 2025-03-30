@@ -1,10 +1,13 @@
-import {Box, Heading, Text} from '@chakra-ui/react';
+import {Box, Heading, Text, Flex} from '@chakra-ui/react';
 import {FaAppleAlt, FaCarrot } from 'react-icons/fa'; 
+import {GiBananaBunch, GiCakeSlice } from 'react-icons/gi'; 
 
 const foodIconMap = {
     //water: <FaBottleWater size={50} />,
-    apple: <FaAppleAlt size={50} />,
-    carrot: <FaCarrot size={50} />,
+    apple: <FaAppleAlt size={50} color="red"/>,
+    carrot: <FaCarrot size={50} color="orange"/>,
+    bananas: <GiBananaBunch size={50} color="yellow"/>,
+    cake: <GiCakeSlice size={50} color="white"/>,
   };
 
   //takes in food object, from backend, which has name and quantity
@@ -17,23 +20,30 @@ const FoodCard = ({food}) => {
     shadow='lg'
     rounded='lg'
     overflow='hidden'
-    transition='all 0.3s'
-    _hover={{ transform: "translateY(-5px)", shadow: "xl"}}
-    p={4}
+    transition='all 0.1s'
+    _hover={{ transform: "translateY(-5px)", shadow: "lg"}}
+    p={1}
+    w="100px"
+    h="100px"
     textAlign="center"
+    bg= "rgb(211, 211, 211)"
     >
 
     {foodIcon ? (
-        <Box mb={4}>
+        <Box mb={4}
+        textAlign="center">
           {foodIcon}
+          
         </Box>
       ) : (
         <Heading size="md" color="gray.500">
           no icon
         </Heading>
       )}
-      <Heading size="md">{food.name}</Heading>
-      <Text fontSize="lg" color="gray.600">Quantity: {food.quantity}</Text>
+      <Flex justify="center" align="center" direction="row" gap={1}>
+                <Heading size="md" color="gray.600" >{food.name}</Heading>
+                <Text fontSize="lg" color="gray.600">x{food.quantity}</Text>
+            </Flex>
     </Box>
   );
 };
