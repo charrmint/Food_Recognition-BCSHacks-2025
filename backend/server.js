@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import foodRoutes from './routes/foodRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 dotenv.config();
 
@@ -22,6 +24,13 @@ try {
     mongoose.connect(MONGO_URI)
     .then(() => {
         console.log(`MongoDB Connected:`, process.env.MONGO_URI);
+
+        // Routes
+        app.use('/api/food', foodRoutes);
+        app.use('/api/user', userRoutes);
+
+        // Server Listening
+
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
 } catch (error) {

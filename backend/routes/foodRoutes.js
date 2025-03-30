@@ -4,22 +4,53 @@ import Refrigerator from '../models/Refrigerator.js';
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-    const { name, refrigeratorID } = req.body;
+router.post('/', async (req, res) => {
+    try {
+        // get user input
+        const { name, refrigeratorID } = req.body;
 
-    if (!name || !refrigeratorID ) {
-        return res.status(400).json({
-            error: 'All fields are required'
+        // check if all fields are filled
+        if (!name || !refrigeratorID ) {
+            return res.status(400).json({
+                error: 'All fields are required'
+            });
+        }    
+
+        // find refrigerator
+        const refrigerator = await Refrigerator.findById(refrigeratorID);
+        if (!refrigerator) {
+            return res.status(404).json({ message: 'Refrigerator not found'});
+        }
+
+        // create new food from input
+        const newFood = new Food({ 
+            name, 
+            refrigerator: refrigeratorID,
         });
+
+        // save food
+        await newFood.save();
+
+        // add food to refrigerator
+        refrigerator.foodList.push(newFood._id);
+        await refrigerator.save();
+
+        res.status(201).json(newFood);
+    } catch (err) {
+        res.status(400).json({ error: err.message});
     }
 
-    // try {
-    //     const newFood = new Food({ name, refrigerator: refrigeratorID});
-    //     await newFood.save();
+router.get('/:id', async (req, res) => {
+    try {
+        const foodItem = await Food.findById(req.params.id).populate('refrigerator');
+        if (!foodItem) {
+            return res.status(401).json({ message: 'Food not found' });
+        }
+        res.status(200).json(foodItem);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+    });
+});
 
-    //     // add to refrigerator
-    //     await Refrigerator.findByIdAndUpdate(refrigeratorID, 
-
-    //     )
-    // }
-})
+export default router;
