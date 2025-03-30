@@ -115,8 +115,8 @@ router.delete('/:id/removeFoods', async (req, res) => {
 router.post('/:id/addFood', async (req, res) => {
     try {
         const { foodName, quantity} = req.body;
-        const { refrigeratorID } = req.params;
-        
+        const { id } = req.params;
+
         if (!foodName || !quantity ) {
             return res.status(400).json({
                 error: 'All fields are required'
@@ -124,7 +124,7 @@ router.post('/:id/addFood', async (req, res) => {
         }
 
         // Find the refrigerator by ID
-        const refrigerator = await Refrigerator.findById(refrigeratorID);
+        const refrigerator = await Refrigerator.findById(id);
         if (!refrigerator) {
             return res.status(404).json ({
                 message: "Refrigerator not found"
