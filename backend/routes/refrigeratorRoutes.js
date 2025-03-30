@@ -76,25 +76,25 @@ router.delete('/:id/removeFoods', async (req, res) => {
         const refrigerator = await Refrigerator.findById(id);
 
         if (!foodName || !quantity) {
-            return res.status(400).json({ message: 'Food name and quantity are required' });
+            return res.status(400).json({ error: 'Food name and quantity are required' });
         }
 
         if (!refrigerator) {
-            return res.status(404).json({ message: 'Refrigerator not found' });
+            return res.status(404).json({ error: 'Refrigerator not found' });
         }
 
         if (!refrigerator.foodMap.has(foodName)) {
-            return res.status(404).json({ message: 'Food not found in refrigerator or pantry' });
+            return res.status(404).json({ error: 'Food not found in refrigerator or pantry' });
         }
 
         if(refrigerator.foodMap.get(foodName).location == 'inside') {
-            return res.status(404).json({ message: 'Can not manually remove foods inside refrigerator'});
+            return res.status(404).json({ error: 'Can not manually remove foods inside refrigerator'});
         }
 
         const quantityToDelete = parseInt(quantity, 10);
 
         if (isNaN(quantityToDelete) || quantityToDelete <= 0) {
-            return res.status(400).json({ message: 'Invalid quantity value' });
+            return res.status(400).json({ error: 'Invalid quantity value' });
         }
 
         const currentFood = refrigerator.foodMap.get(foodName);
