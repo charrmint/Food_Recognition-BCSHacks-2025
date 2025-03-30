@@ -168,6 +168,35 @@ router.get('/:id/foodMap', async (req, res) => {
     } catch (err) {
         res.status(404).json({ error: err.message})
     }
-})
+});
+
+router.post('/:id/updateFoodMap', async (req, res) => {
+    try {
+        const refrigerator = await Refrigerator.findById(req.params.id);
+
+        if (!refrigerator) {
+            return res.status(404).json({ message: 'Refrigerator not found '})
+        }
+
+        const {insideFood} = req.body; // array of "inside" food
+
+        // remove "inside" food
+        const updateFoodMap = Object.entries(refrigerator.foodMap).filter(
+            ([foodName])=>!insideFood.includes(foodName));
+
+        const newFoodMap = new Map(updateFoodMap);
+
+        refrigerator.foodMap = newFoodMap;
+
+        await refrigerator.save();
+
+        res.status(200).json({
+            message: "Food map updated successfully", foodMap: newFoodMap});
+
+
+    } catch (error) {
+        res.status(500).json({ error: err.message})
+    }
+});
 
 export default router;
