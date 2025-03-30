@@ -41,4 +41,6 @@ router.post("/", async (req, res) => {
         console.error("Error in Create product:", error.message);
         res.status(500).json({success: false, message: "Server Error" });
     }
-})
+});
+
+export default router;
