@@ -84,7 +84,11 @@ router.delete('/:id/removeFoods', async (req, res) => {
         }
 
         if (!refrigerator.foodMap.has(foodName)) {
-            return res.status(404).json({ message: 'Food not found in refrigerator' });
+            return res.status(404).json({ message: 'Food not found in refrigerator or pantry' });
+        }
+
+        if(refrigerator.foodMap.get(foodName).location == 'inside') {
+            return res.status(404).json({ message: 'Can not manually remove foods inside refrigerator'});
         }
 
         const quantityToDelete = parseInt(quantity, 10);
@@ -134,6 +138,11 @@ router.post('/:id/addFood', async (req, res) => {
         // Update the foods map with the new food item and its quantity
         // If the food already exists, update the quantity
         if (refrigerator.foodMap.has(foodName)) {
+
+            if(refrigerator.foodMap.get(foodName).location == 'inside') {
+                return res.status(404).json({ message: 'Can not manually add foods inside refrigerator'});
+            }
+
             refrigerator.foodMap.set(foodName, {
                 quantity: refrigerator.foodMap.get(foodName).quantity + quantity,
             });
