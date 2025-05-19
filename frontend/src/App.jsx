@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import CreatePage from './pages/CreatePage';
 import AskPage from './pages/AskPage';
 import HomePage from './pages/HomePage';
-import UserPage from './pages/UserPage';
+import SignupPage from './pages/SignupPage';
 import RemovePage from './pages/RemovePage';
 import Navbar from './components/Navbar';
 import { useFoodStore } from './store/food';
@@ -17,7 +17,7 @@ function App() {
       <Box minH={"100vh"} bg = {useColorModeValue("gray.100", "gray.900")}>
         <Navbar />
           <Routes>
-            <Route path="/user" element={<UserPage />} />
+            <Route path="/user" element={<SignupPage />} />
             <Route path= "/" element={<HomePage />}/>
             <Route path= "/addFood" element={<CreatePage />}/>
             <Route path= "/AskPage" element={<AskPage />}/>
