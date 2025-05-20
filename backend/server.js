@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes.js';
 import refrigeratorRoutes from './routes/refrigeratorRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -25,6 +26,7 @@ try {
         console.log(`MongoDB Connected:`, process.env.MONGO_URI);
 
         // Routes
+        app.use('/api/auth', authRoutes);
         app.use('/api/user', userRoutes);
         app.use('/api/refrigerator', refrigeratorRoutes);
 
