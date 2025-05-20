@@ -18,9 +18,9 @@ router.post('/', async (req, res) => {
         }
 
         // check if all fields are filled
-        if (!name || !email || !password || !refrigeratorId ) {
+        if (!name || !email || !password ) {
             return res.status(400).json({
-                error: 'All fields are required'
+                error: 'Name, email, and password are required'
             });
         }    
 
@@ -35,13 +35,13 @@ router.post('/', async (req, res) => {
             name,
             email,
             password, 
-            refrigerator: refrigeratorId,
+            refrigeratorId,
         });
 
         // save user
         await newUser.save();
 
-        // add food to refrigerator
+        // add user to refrigerator
         refrigerator.userList.push(newUser._id);
         await refrigerator.save();
 
