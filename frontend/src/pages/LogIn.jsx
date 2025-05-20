@@ -13,6 +13,7 @@ const LogIn = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setUserCredentials((prevDetails) => ({
+          ...prevDetails,
             [name]: value
         }));
     };
@@ -32,63 +33,56 @@ const LogIn = () => {
 
         try {
             // Send POST request to backend
-            const response = await axios.post("http://localhost:5050/api/user/login", {
+            const response = await axios.post("http://localhost:5050/api/auth/login", {
                 email, 
                 password
             });
 
-            if (response.status === 201) {
+            if (response.status === 200) {
+
+                const token = response.data.token;
+                
+                const user = {
+                  _id: response.data._id,
+                  name: response.data.name,
+                  email: response.data.email,
+                  regrigeratorId: response.data.refrigeratorId
+                }
+
+                localStorage.setItem('authToken', token);
+                localStorage.setItem('userInfor', JSON.stringify(user));
+
                 toast({
-                    title: 'Success',
-                    description: 'User added successfully.',
-                    status: 'success',
-                    isClosable: true,
-                });
-             
-            
-                // Reset form after success
-                setUserDetails({ 
-                    name: '', 
-                    email: '',
-                    password: '',
-                    refrigeratorId: '' 
-                });
+                  title: 'Success',
+                  description: 'User logged in succesfully',
+                  status: 'success',
+                  isClosable: true,
+              });
+
+              navigate('/HomePage');
+
+              setLoginCredentials({
+                email: "",
+                password: ""
+              })
             } else {
                 toast({
-                    title: 'Error',
-                    description: `Failed to add user. Status: ${response.status}`,
+                    title: 'Login Failed',
+                    description: `Unexpected response: ${response.status}`,
                     status: 'error',
                     isClosable: true,
                 });
             }
         } catch (error) {
             console.error('Error adding user:', error);
-            
-            // Log error details for better debugging
-            if (error.response) {
-                console.error('Error response:', error.response);
-                toast({
-                    title: 'Error',
-                    description: `API Error: ${error.response.data.error}`,
-                    status: 'error',
-                    isClosable: true,
-                });
-            } else {
-                toast({
-                    title: 'Error',
-                    description: 'Something went wrong.',
-                    status: 'error',
-                    isClosable: true,
-                });
-            }
-        }
+          }
     };
 
     return (
         <Container maxW="container.sm">
             <VStack spacing={12}>
                 <Heading as="h1" size="2xl" textAlign="center" mb={8}>
-                    Create New User
+                    Log In
                 </Heading>
                 <Box
                     w="300px"
@@ -99,33 +93,21 @@ const LogIn = () => {
                 >
                     <VStack spacing={10}>
                         <Input
-                            placeholder="Name"
-                            name="name"
-                            value={userDetails.name}
-                            onChange={handleInputChange}
-                        />
-                        <Input
                             placeholder="Email"
                             name="email"
                             type="email"
-                            value={userDetails.email}
+                            value={userCredentials.email}
                             onChange={handleInputChange}
                         />
                         <Input
                             placeholder="Password"
                             name="password"
                             type="password"
-                            value={userDetails.password}
-                            onChange={handleInputChange}
-                        />
-                        <Input
-                            placeholder="Refrigerator ID"
-                            name="refrigeratorId"
-                            value={userDetails.refrigeratorId}
+                            value={userCredentials.password}
                             onChange={handleInputChange}
                         />
                         <Button colorScheme="blue" onClick={handleSubmit} w="full">
-                            Create User
+                            Log In
                         </Button>
                     </VStack>
                 </Box>
