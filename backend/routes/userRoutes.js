@@ -10,6 +10,13 @@ router.post('/', async (req, res) => {
         // get user input
         const { name, email, password, refrigeratorId } = req.body;
 
+        // check if email already exists
+        if (await User.findOne({ email: email })) {
+          return res.status(400).json({
+            error: 'E-mail already registered'
+          });
+        }
+
         // check if all fields are filled
         if (!name || !email || !password || !refrigeratorId ) {
             return res.status(400).json({
@@ -23,7 +30,7 @@ router.post('/', async (req, res) => {
             return res.status(404).json({ message: 'Refrigerator not found'});
         }
 
-        // create new food from input
+        // create new user from input
         const newUser = new User({ 
             name,
             email,
