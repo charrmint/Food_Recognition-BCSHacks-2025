@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import SignupPage from './pages/SignupPage';
 import RemovePage from './pages/RemovePage';
 import Navbar from './components/Navbar';
+import LogIn from './pages/logIn';
 import { useFoodStore } from './store/food';
 import { useColorModeValue } from '@chakra-ui/react';
 
@@ -18,6 +19,7 @@ function App() {
         <Navbar />
           <Routes>
             <Route path="/user" element={<SignupPage />} />
+            <Route path="/login" element={<LogIn />} />
             <Route path= "/" element={<HomePage />}/>
             <Route path= "/addFood" element={<CreatePage />}/>
             <Route path= "/AskPage" element={<AskPage />}/>
