@@ -50,6 +50,12 @@ const Navbar = () => {
             </Button>
           </Link>
 
+          <Link to={"/login"}>
+            <Button>
+              <MdSettings fontSize={20} />
+            </Button>
+          </Link>
+
           <Link to={"/AskPage"}>
             <Button>
               <LuSearch fontSize={20} />

@@ -2,9 +2,11 @@ import express from 'express'
 import Refrigerator from '../models/Refrigerator.js';
 import User from '../models/User.js';
 import Food from '../models/Food.js'
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
+// create refrigerator
 router.post('/', async (req, res) => {
     try {
         const { name, userIds, foodMap, currentImage, pastImage } = req.body;
@@ -26,10 +28,8 @@ router.post('/', async (req, res) => {
     }
 });
 
-// to add assign user, and put food
-
 // get refrigerator, assigned users, and assigned foods
-router.get('/:id', async (req, res) => {
+router.get('/:id', protect, async (req, res) => {
     try {
         const refrigerator = await Refrigerator.findById(req.params.id)
         .populate('userList')
@@ -68,7 +68,7 @@ router.put('/:id/removeUser', async (req, res) => {
 });
 
 // remove foods
-router.delete('/:id/removeFoods', async (req, res) => {
+router.delete('/:id/removeFoods', protect, async (req, res) => {
     try {
         const { foodName, quantity } = req.body;
         const { id } = req.params;
@@ -112,11 +112,10 @@ router.delete('/:id/removeFoods', async (req, res) => {
     } catch(err) {
         res.status(400).json({ error: err.message });
     }
-}
+})
 
-)
-
-router.post('/:id/addFood', async (req, res) => {
+// add foods
+router.post('/:id/addFood', protect, async (req, res) => {
     try {
         const { foodName, quantity} = req.body;
         const { id } = req.params;
@@ -223,7 +222,7 @@ router.get('/:id/foodMap', async (req, res) => {
 //     }
 //   });
   
-router.post('/:id/updateFoodMap', async (req, res) => {
+router.post('/:id/updateFoodMap', protect, async (req, res) => {
     try {
         const { id } = req.params;
         const inputFoodObject = req.body.foodMap; 
