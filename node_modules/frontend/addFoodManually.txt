@@ -1,0 +1,59 @@
+import express from 'express';
+import Food from '../models/Food.js';
+import Refrigerator from '../models/Refrigerator.js';
+
+// this belongs in foodRoutes
+const router = express.Router();
+
+// create food, add to data
+router.post("/", async (req, res) => {
+    const { name, refrigeratorID, quantity } = req.body;
+
+    // check it
+    if (!name || !refrigeratorID || !quantity) {
+        return res.status(400).json({
+            error: 'Name, refrigerator ID, and quantity are required'
+        });
+    }
+
+    try {
+        // create
+        const newFood = new Food({
+            name,
+            refrigerator: refrigeratorID,
+            quantity
+        });
+        
+        // save
+        await newFood.save();
+
+        // need to update if removed, or more of same type added
+
+        // sends back
+        return res.status(201).json({
+            success: true,
+            message: 'Food added successfully',
+            data: newFood
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            error: 'Failed to add food'
+        });
+    }
+});
+
+// fetchs food
+router.get("/", async (req, res) => {
+    try {
+        const foods = await Food.find().populate('refrigerator');  // populate??
+        return res.status(200).json({ data: foods });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            error: 'Failed to fetch foods'
+        });
+    }
+});
+
+export default router;
