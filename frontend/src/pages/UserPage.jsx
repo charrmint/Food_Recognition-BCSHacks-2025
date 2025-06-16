@@ -143,54 +143,54 @@ import axios from 'axios';
 
 // src/pages/SignupPage.jsx
 
-import React from "react";
+// import React from "react";
 
-export default function SignupPage() {
-  return (
-    <div className="w-screen h-screen bg-[#FFF1D8] flex justify-center items-center">
-      <div className="w-[632px] h-[689px] bg-white border border-[#FFBDBD] shadow-xl relative rounded-lg p-10">
-        <h1 className="text-[48px] font-bold text-[#FFC148] text-center mt-5">Sign up</h1>
+// export default function SignupPage() {
+//   return (
+//     <div className="w-screen h-screen bg-[#FFF1D8] flex justify-center items-center">
+//       <div className="w-[632px] h-[689px] bg-white border border-[#FFBDBD] shadow-xl relative rounded-lg p-10">
+//         <h1 className="text-[48px] font-bold text-[#FFC148] text-center mt-5">Sign up</h1>
 
-        <div className="flex flex-col gap-6 mt-16 items-center">
-          {/* Name Input */}
-          <input
-            type="text"
-            placeholder="Name"
-            className="w-[378px] h-[52px] border border-[#969696] rounded px-4 text-[20px] text-[#6E6E6E]"
-          />
+//         <div className="flex flex-col gap-6 mt-16 items-center">
+//           {/* Name Input */}
+//           <input
+//             type="text"
+//             placeholder="Name"
+//             className="w-[378px] h-[52px] border border-[#969696] rounded px-4 text-[20px] text-[#6E6E6E]"
+//           />
 
-          {/* Email Input */}
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-[378px] h-[52px] border border-[#969696] rounded px-4 text-[20px] text-[#6E6E6E]"
-          />
+//           {/* Email Input */}
+//           <input
+//             type="email"
+//             placeholder="Email"
+//             className="w-[378px] h-[52px] border border-[#969696] rounded px-4 text-[20px] text-[#6E6E6E]"
+//           />
 
-          {/* Password Input */}
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-[378px] h-[52px] border border-[#969696] rounded px-4 text-[20px] text-[#6E6E6E]"
-          />
+//           {/* Password Input */}
+//           <input
+//             type="password"
+//             placeholder="Password"
+//             className="w-[378px] h-[52px] border border-[#969696] rounded px-4 text-[20px] text-[#6E6E6E]"
+//           />
 
-          {/* Buttons */}
-          <div className="flex justify-between w-[378px] mt-4">
-            <button className="w-[170px] h-[52px] bg-[#FFC148] text-white rounded-full font-semibold text-[20px]">
-              Sign up
-            </button>
+//           {/* Buttons */}
+//           <div className="flex justify-between w-[378px] mt-4">
+//             <button className="w-[170px] h-[52px] bg-[#FFC148] text-white rounded-full font-semibold text-[20px]">
+//               Sign up
+//             </button>
 
-            <div className="text-center">
-              <p className="text-[11px] text-black mb-1">Already have an account?</p>
-              <button className="w-[170px] h-[52px] border border-[#969696] rounded-full text-black font-semibold text-[20px]">
-                Log in
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+//             <div className="text-center">
+//               <p className="text-[11px] text-black mb-1">Already have an account?</p>
+//               <button className="w-[170px] h-[52px] border border-[#969696] rounded-full text-black font-semibold text-[20px]">
+//                 Log in
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 
 
