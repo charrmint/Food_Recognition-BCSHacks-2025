@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     try {
         // get user input
-        const { name, email, password, refrigeratorId } = req.body;
+        const { username, email, password, refrigeratorId } = req.body;
 
         // check if email already exists
         if (await User.findOne({ email: email })) {
@@ -18,9 +18,9 @@ router.post('/', async (req, res) => {
         }
 
         // check if all fields are filled
-        if (!name || !email || !password ) {
+        if (!username || !email || !password ) {
             return res.status(400).json({
-                error: 'Name, email, and password are required'
+                error: 'username, email, and password are required'
             });
         }    
 
@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
 
         // create new user from input
         const newUser = new User({ 
-            name,
+            username,
             email,
             password, 
             refrigeratorId,
@@ -54,7 +54,7 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const userFind = await User.findById(req.params.id)
-        .populate('name')
+        .populate('username')
         .populate('email')
         .populate('refrigerator');
 

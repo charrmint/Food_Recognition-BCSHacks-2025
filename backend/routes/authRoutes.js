@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
 
       res.json({
         _id: user._id,
-        name: user.name,
+        username: user.username,
         email: user.email,
         token: token
       })
@@ -39,21 +39,32 @@ router.post('/login', async (req, res) => {
   }
 })
 
-router.post('/signin', async (req, res) => {
-  const{ name, email, password } = req.body;
-  if (!name || !email || !password) {
+router.post('/signup', async (req, res) => {
+  const{ username, email, password } = req.body;
+  if (!username || !email || !password) {
     return res.status(400).json({
       message: "Please enter all fields."
     });
   }
 
   try {
-    const newUser = new User ({name, email, password});
+    // const existingUser = await User.findOne({$or: [{username}, {email}]});
+    // if (existingUser) {
+    //   return res.status(400).json({message: "Username or email already taken."});
+    // }
+    const existingUsername = await User.findOne({username});
+    const existingEmail = await User.findOne({email});
+    if (existingUsername) {
+      return res.status(400).json({message: "Username already taken."});
+    } if (existingEmail) {
+      return res.status(400).json({message: "Email already taken."});
+    }
+    const newUser = new User ({username, email, password});
     await newUser.save();
     res.status(201).json("User created successfully.");
   } catch (error) {
     res.status(500).json({
-      message: "An error occured during signin"
+        message: "An error occurred during signup."
     });
   }
   
