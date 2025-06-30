@@ -44,7 +44,7 @@ const Navbar = () => {
           </Button>
           </Link>
 
-          <Link to={"/user"}>
+          <Link to={"/signup"}>
             <Button>
               <MdSettings fontSize={20} />
             </Button>

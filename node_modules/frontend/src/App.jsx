@@ -18,7 +18,7 @@ function App() {
       <Box minH={"100vh"} bg = {useColorModeValue("gray.100", "gray.900")}>
         <Navbar />
           <Routes>
-            <Route path="/user" element={<SignupPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LogIn />} />
             <Route path= "/" element={<HomePage />}/>
             <Route path= "/addFood" element={<CreatePage />}/>
