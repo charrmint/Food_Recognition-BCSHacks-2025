@@ -6,7 +6,7 @@ import HomePage from './pages/HomePage';
 import SignupPage from './pages/SignupPage';
 import RemovePage from './pages/RemovePage';
 import Navbar from './components/Navbar';
-import LogIn from './pages/logIn';
+import LogIn from './pages/LogIn';
 import { useFoodStore } from './store/food';
 import { useColorModeValue } from '@chakra-ui/react';
 

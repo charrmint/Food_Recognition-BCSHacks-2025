@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/User.js';
+import Refrigerator from '../models/Refrigerator.js';
 import generateToken from '../utils/generateToken.js';
 
 const router = express.Router();
@@ -55,10 +56,32 @@ router.post('/signup', async (req, res) => {
     } if (existingEmail) {
       return res.status(400).json({message: "Email already taken."});
     }
-    const newUser = new User ({username, email, password});
+
+    // Create a refrigerator for this user
+    const newRefrigerator = new Refrigerator({
+      username: `${username}'s Refrigerator`,
+      userList: [],           // will add user ID after user is created
+      foodMap: new Map()
+    });
+    await newRefrigerator.save();
+
+    // Create the user and link the refrigerator
+    const newUser = new User ({username, email, password, refrigeratorId: newRefrigerator._id});
     await newUser.save();
-    res.status(201).json("User created successfully.");
+
+    // Add user to the refrigerator's userList
+    newRefrigerator.userList.push(newUser._id);
+    await newRefrigerator.save();
+
+    res.status(201).json({
+      _id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      refrigeratorId: newUser.refrigeratorId,
+      message: "User created successfully"
+    });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
         message: "An error occurred during signup."
     });

@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import userRoutes from './routes/userRoutes.js';
+//import userRoutes from './routes/userRoutes.js';
 import refrigeratorRoutes from './routes/refrigeratorRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import path from 'path';
@@ -27,7 +27,7 @@ try {
 
         // Routes
         app.use('/api/auth', authRoutes);
-        app.use('/api/user', userRoutes);
+        //app.use('/api/user', userRoutes);
         app.use('/api/refrigerator', refrigeratorRoutes);
 
         // Server Listening
