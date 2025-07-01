@@ -11,7 +11,6 @@ const HomePage = () => {
     fetchFood();
 }, [fetchFood]);
 
-
   return (
     <Container maxW='container.xl' py={12}>
       <VStack spacing={8}>
