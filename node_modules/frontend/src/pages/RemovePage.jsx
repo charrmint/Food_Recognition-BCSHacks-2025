@@ -15,8 +15,18 @@ const RemovePage = () => {
 
     useEffect(() => {
         const fetchFoodMap = async () => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            const refrigeratorId = user?.refrigeratorId;
+            if (!refrigeratorId) {
+                console.warn("No refrigerator ID found.");
+                return;
+            }
             try {
-                const response = await axios.get(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/foodMap`);
+                const response = await axios.get(`http://localhost:5050/api/refrigerator/${refrigeratorId}/foodMap`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    }
+                });
                 const foodData = response.data.foodMap;
                 const map = new Map(Object.entries(foodData));
                 setFoodMap(map);
@@ -30,8 +40,18 @@ const RemovePage = () => {
 
     const handleRemoveFood = async () => {
         const { foodName, quantity } = newFood;
-
+        const user = JSON.parse(localStorage.getItem("user"));
+        const refrigeratorId = user?.refrigeratorId;
         console.log("Removing food:", newFood);
+        if (!refrigeratorId) {
+            toast({
+                title: 'Error',
+                description: 'No refrigerator ID found.',
+                status: 'error',
+                isClosable: true,
+            });
+            return;
+        }
 
         if (!foodName || !quantity) {
             toast({
@@ -54,7 +74,12 @@ const RemovePage = () => {
         }
 
         try {
-            const response = await axios.delete(`http://localhost:5050/api/refrigerator/67e8d93a1f1d440ffc1093c7/removeFoods`, {data: { foodName, quantity }});
+            const response = await axios.delete(`http://localhost:5050/api/refrigerator/${refrigeratorId}/removeFoods`, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+                data: { foodName, quantity }
+            });
 
             if (response.status === 200) {
                 toast({
@@ -68,8 +93,14 @@ const RemovePage = () => {
                 setNewFood({ foodName: '', quantity: '' });
 
                 // Re-fetch the foodMap after adding a new food
-                const updatedFoodMap = new Map(foodMap);
-                updatedFoodMap.set(foodName, quantity); // Add the new food to the Map
+                const updatedRes = await axios.get(`http://localhost:5050/api/refrigerator/${refrigeratorId}/foodMap`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    }
+                });
+                const updatedFoodMap = new Map(Object.entries(updatedRes.data.foodMap));
+                //const updatedFoodMap = new Map(foodMap);
+                //updatedFoodMap.set(foodName, quantity); // Add the new food to the Map
                 setFoodMap(updatedFoodMap);
             } else {
                 toast({
