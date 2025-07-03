@@ -57,27 +57,28 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({message: "Email already taken."});
     }
 
+    // Create the user
+    const newUser = new User ({username, email, password});
+    await newUser.save();
+
     // Create a refrigerator for this user
     const newRefrigerator = new Refrigerator({
-      username: `${username}'s Refrigerator`,
-      userList: [],           // will add user ID after user is created
-      foodMap: new Map()
+      username: username,
+      userList: [newUser._id],           // will add user ID after user is created
+      foodMap: {}
     });
     await newRefrigerator.save();
 
-    // Create the user and link the refrigerator
-    const newUser = new User ({username, email, password, refrigeratorId: newRefrigerator._id});
+    // Link refrigerator to user and save again
+    newUser.refrigeratorId = newRefrigerator._id;
     await newUser.save();
-
-    // Add user to the refrigerator's userList
-    newRefrigerator.userList.push(newUser._id);
-    await newRefrigerator.save();
 
     res.status(201).json({
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
       refrigeratorId: newUser.refrigeratorId,
+      token: generateToken(newUser._id),
       message: "User created successfully"
     });
   } catch (error) {

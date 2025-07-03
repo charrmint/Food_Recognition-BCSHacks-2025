@@ -23,12 +23,16 @@ const MONGO_URI = process.env.MONGO_URI
 try {
     mongoose.connect(MONGO_URI)
     .then(() => {
+        // test
+        app.get("/api/test", (req, res) => {
+            res.send("API is working");
+        });
         console.log(`MongoDB Connected:`, process.env.MONGO_URI);
-
         // Routes
         app.use('/api/auth', authRoutes);
         //app.use('/api/user', userRoutes);
         app.use('/api/refrigerator', refrigeratorRoutes);
+        
 
         // Server Listening
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
