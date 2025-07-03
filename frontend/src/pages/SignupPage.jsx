@@ -36,7 +36,7 @@ const SignupPage = () => {
 
         try {
             //Send POST request to backend
-            const response = await axios.post("http://localhost:5050/api/auth/signup", {
+            const response = await axios.post(`http://localhost:5050/api/auth/signup`, {
                 username,
                 email, 
                 password
@@ -69,7 +69,7 @@ const SignupPage = () => {
                 email: "",
                 password: ""
               })
-              navigate("/login");
+              navigate(`/login`);
             } else {
                 toast({
                     title: 'Error',
