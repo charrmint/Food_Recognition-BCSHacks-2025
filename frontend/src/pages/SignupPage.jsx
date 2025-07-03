@@ -35,12 +35,24 @@ const SignupPage = () => {
         }
 
         try {
-            // Send POST request to backend
-            const response = await axios.post("http://localhost:5050/api/signup", {
+            //Send POST request to backend
+            const response = await axios.post("http://localhost:5050/api/auth/signup", {
                 username,
                 email, 
                 password
             });
+            
+            // const response = await fetch ('http://localhost:5050/api/auth/signup', 
+            //     {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify(userDetails),
+            //     }
+            // );
+            // const data = await response.json();
+            // console.log(data);
 
             if (response.status === 201) {
                 toast({
@@ -51,13 +63,13 @@ const SignupPage = () => {
               });
 
               localStorage.setItem('user', JSON.stringify(response.data));
-              navigate("/login");
 
               setUserDetails({
                 username: "",
                 email: "",
                 password: ""
               })
+              navigate("/login");
             } else {
                 toast({
                     title: 'Error',
