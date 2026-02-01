@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../models/User.js';
 import Refrigerator from '../models/Refrigerator.js';
 import generateToken from '../utils/generateToken.js';
+import createRefrigeratorForUser from '../utils/createRefrigeratorForUser.js';
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.post('/login', async (req, res) => {
     if (user && (await user.matchPassword(password))) {
       const token = generateToken(user._id);
 
-      res.json({
+      return res.json({
         _id: user._id,
         username: user.username,
         email: user.email,
@@ -30,12 +31,12 @@ router.post('/login', async (req, res) => {
     }
 
     else {
-      res.status(400).json({
-        message: "Invalid email or password"
+      return res.status(400).json({
+      message: "Invalid email or password"
       })
     }
   } catch (error) {
-    res.status(500).json({
+      return res.status(500).json({
       message: "An error occured during login"
     });
   }
@@ -74,7 +75,7 @@ router.post('/signup', async (req, res) => {
     newUser.refrigeratorId = newRefrigerator._id;
     await newUser.save();
 
-    res.status(201).json({
+    return res.status(201).json({
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
@@ -83,12 +84,99 @@ router.post('/signup', async (req, res) => {
       message: "User created successfully"
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
+      console.error(error);
+      return res.status(500).json({
         message: "An error occurred during signup."
     });
   }
   
+})
+
+router.get('/google', (req, res) => {
+    const params = new URLSearchParams({
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        redirect_uri: process.env.GOOGLE_CALLBACK_URL,
+        response_type: 'code',
+        scope: 'openid email profile',
+        access_type: 'offline',
+        prompt: 'consent',
+    });
+
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+    res.redirect(googleAuthUrl);
+})
+
+router.get('/google/callback', async (req, res) => {
+    const { code } = req.query;
+
+    if (!code) {
+        return res.status(400).json({ message: 'Authorization code missing' });
+    }
+
+    try {
+        const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                code,
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_CLIENT_SECRET,
+                redirect_uri: process.env.GOOGLE_CALLBACK_URL,
+                grant_type: 'authorization_code'
+            })
+        });
+    
+        const tokens = await tokenResponse.json();
+
+        if (tokens.error) {
+            return res.status(400).json({ message: tokens.error_description || 'Token exchange failed' });
+        }
+    
+        const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: { Authorization: `Bearer ${tokens.access_token}` }
+        });
+    
+        const googleUser = await userInfoResponse.json();
+    
+        let user = await User.findOne({
+            'providers.provider': 'google',
+            'providers.providerId': googleUser.id
+        });
+    
+        if (!user) {
+            user = await User.findOne({
+                email: googleUser.email
+            });
+    
+            if (user) {
+                user.providers.push({
+                    provider: 'google',
+                    providerId: googleUser.id
+                });
+                await user.save();
+            } else {
+                user = new User({
+                    email: googleUser.email,
+                    username: googleUser.name.replace(/\s+/g, '_').toLowerCase(),
+                    providers: [{
+                        provider: 'google',
+                        providerId: googleUser.id
+                    }]
+                });
+                await user.save();
+
+                await createRefrigeratorForUser(user);
+            }
+        }
+    
+        const token = generateToken(user._id);
+        return res.redirect(`http://localhost:3000/auth/callback?token=${token}`);
+    } catch (error) {
+        console.error('Google OAuth error:', error);
+        return res.status(500).json({
+            message: 'OAuth failed'
+        });
+    }
 })
 
 

@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js'; 
+import Refrigerator from '../models/Refrigerator.js';
+import res from 'express/lib/response.js';
 
 const protect = async (req, res, next) => {
     let token;
@@ -27,4 +29,34 @@ const protect = async (req, res, next) => {
     }
 };
 
-export default protect;
+const checkRefrigeratorAccess = async (req, res, next) => {
+    try {
+        const refrigerator = await Refrigerator.findById(req.params.id);
+
+        if (!refrigerator) {
+            return res.status(404).json({
+                message: 'Refrigerator not found'
+            });
+        }
+
+        const hasAccess = refrigerator.userList.some(
+            userId => userId.equals(req.user._id)
+        );
+
+        if (!hasAccess) {
+            return res.status(403).json({
+                message: 'Not authorized to access this refrigerator'
+            });
+        }
+
+        req.refrigerator = refrigerator;
+        return next();
+    } catch (error) {
+        console.error('Error checking refrigerator access:', error);
+        return res.status(500).json({
+            message: 'Error checking refrigerator access'
+        });
+    }
+};
+
+export { protect, checkRefrigeratorAccess };
