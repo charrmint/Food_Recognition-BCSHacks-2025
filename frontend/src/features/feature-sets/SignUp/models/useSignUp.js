@@ -57,10 +57,10 @@ export const useSignUp = () => {
     }
 
     return {
-        userDetails:{userDetails},
-        handleInputChange:{handleInputChange},
-        handleSubmit:{handleSubmit},
-        isFetching:{isFetching}
+        userDetails,
+        handleInputChange,
+        handleSubmit,
+        isFetching,
     }
 }
 

@@ -1,0 +1,18 @@
+export const messages = {
+    loginHeader: 'Welcome Back',
+    signupHeader: 'Create Account',
+    emailPlaceholder: 'Email',
+    passwordPlaceholder: 'Password',
+    usernamePlaceholder: 'Username',
+    loginButton: 'Log In',
+    signupButton: 'Sign Up',
+    googleButton: 'Continue with Google',
+    switchToSignup: "Don't have an account? Sign up",
+    switchToLogin: 'Already have an account? Log in',
+    toastSuccess: 'Success',
+    toastError: 'Error',
+    userNameRequired: 'Username required',
+    emailPasswordRequired: 'Email and password required',
+    loginSuccess: 'Logged in successfully',
+    signupSuccess: 'Signed up successfully',
+}
