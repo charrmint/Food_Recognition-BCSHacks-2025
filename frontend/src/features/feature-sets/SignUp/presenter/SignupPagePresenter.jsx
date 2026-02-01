@@ -18,6 +18,6 @@ const SignupPagePresenter = () => {
     );
 };
 
-export default SignupPage;
+export default SignupPagePresenter;
 
 

@@ -7,7 +7,7 @@ import { protect } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // create refrigerator
-router.post('/', async (req, res) => {
+router.post('/', protect, async (req, res) => {
     try {
         const { name, userIds, foodMap, currentImage, pastImage } = req.body;
 
@@ -46,7 +46,7 @@ router.get('/:id', protect, async (req, res) => {
 });
 
 // remove user
-router.put('/:id/removeUser', async (req, res) => {
+router.put('/:id/removeUser', protect, async (req, res) => {
     try {
         const { userId } = req.body;
         const { id } = req.params;
@@ -75,6 +75,7 @@ router.delete('/:id/removeFoods', protect, async (req, res) => {
 
         const refrigerator = await Refrigerator.findById(id);
 
+        // TODO: transfer functionality to frontend
         if (!foodName || !quantity) {
             return res.status(400).json({ error: 'Food name and quantity are required' });
         }
@@ -93,6 +94,7 @@ router.delete('/:id/removeFoods', protect, async (req, res) => {
 
         const quantityToDelete = parseInt(quantity, 10);
 
+        // TODO: transfer functionality to frontend
         if (isNaN(quantityToDelete) || quantityToDelete <= 0) {
             return res.status(400).json({ error: 'Invalid quantity value' });
         }
@@ -164,7 +166,7 @@ router.post('/:id/addFood', protect, async (req, res) => {
 
 });
 
-router.get('/:id/foodMap', async (req, res) => {
+router.get('/:id/foodMap', protect, async (req, res) => {
     try {
         const refrigerator = await Refrigerator.findById(req.params.id);
 

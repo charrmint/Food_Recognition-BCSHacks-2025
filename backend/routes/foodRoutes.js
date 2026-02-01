@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
         const { name, refrigeratorId } = req.body;
 
         // check if all fields are filled
-        if (name || !refrigeratorId ) {
+        if (!name || !refrigeratorId ) {
             return res.status(400).json({
                 error: 'All fields are required'
             });

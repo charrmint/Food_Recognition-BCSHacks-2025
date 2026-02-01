@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/login', async (req, res) => {
   const{ email, password } = req.body;
 
+  // TODO: transfer this check to front-end
   if (!email || !password) {
     return res.status(400).json({
       message: "Please enter both email and password"
