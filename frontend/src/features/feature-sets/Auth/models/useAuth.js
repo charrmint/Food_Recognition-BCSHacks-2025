@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/AuthStore'
 import { useToast } from '@chakra-ui/react'
+import { messages } from '../views/messages'
 
 export const useAuth = () => {
     const [mode, setMode] = useState('login')
     const [formData, setFormData] = useState({
         username: '',
-        emaial: '',
+        email: '',
         password: '',       
     })
     const [isFetching, setIsFetching] = useState(false)
@@ -32,9 +33,9 @@ export const useAuth = () => {
 
         if (mode === 'signup' && !username) {
             toast({
-                title: messages.toastSuccess,
+                title: messages.toastError,
                 description: messages.userNameRequired,
-                status: error,
+                status: 'error',
                 isClosable: true,
             })
             return
@@ -43,7 +44,7 @@ export const useAuth = () => {
             toast({
                 title: messages.toastError,
                 description: messages.emailPasswordRequired,
-                status: error,
+                status: 'error',
                 isClosable: true,
             })
             return
@@ -56,7 +57,7 @@ export const useAuth = () => {
                 toast({
                     title: messages.toastSuccess,
                     description: messages.loginSuccess,
-                    status: error,
+                    status: 'success',
                     isClosable: true,
                 })
                 navigate('/')
@@ -65,7 +66,7 @@ export const useAuth = () => {
                 toast({
                     title: messages.toastSuccess,
                     description: messages.signupSuccess,
-                    status: error,
+                    status: 'success',
                     isClosable: true,
                 })
                 setMode('login')

@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import Refrigerator from '../models/Refrigerator.js';
 import generateToken from '../utils/generateToken.js';
 import createRefrigeratorForUser from '../utils/createRefrigeratorForUser.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -170,13 +171,17 @@ router.get('/google/callback', async (req, res) => {
         }
     
         const token = generateToken(user._id);
-        return res.redirect(`http://localhost:3000/auth/callback?token=${token}`);
+        return res.redirect(`http://localhost:5173/auth/callback?token=${token}`);
     } catch (error) {
         console.error('Google OAuth error:', error);
         return res.status(500).json({
             message: 'OAuth failed'
         });
     }
+})
+
+router.get('/me', protect, async (req, res) => {
+  return res.json(req.user);
 })
 
 

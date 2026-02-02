@@ -3,12 +3,12 @@ import { api }from '@/api'
 
 export const useAuthStore = create((set) => ({
     user: null,
-    loadingUser: false,
+    loadingUser: true,
     fetchMe: async () => {
         set({ loadingUser: true })
         try {
             const { data } = await api.get('/auth/me')
-            set({ user: data, loadingUser: true })
+            set({ user: data, loadingUser: false })
         } catch {
             set({ user: null, loadingUser: false})
         }

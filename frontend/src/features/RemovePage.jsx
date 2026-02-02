@@ -1,11 +1,12 @@
 import {Box, Container, Heading, useColorModeValue, useToast, VStack, Input, Button} from '@chakra-ui/react';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
-//let refrigerator_id_here = 1;
+import { useAuthStore } from '../store/AuthStore';
+import { api } from '@/api';
 
 //needs to interact with backend to be able to addFoods
 const RemovePage = () => {
-    const [newFood, setNewFood] = useState({
+    const [foodToRemove, setNewFood] = useState({
         foodName: "",
         quantity: "",
     });
@@ -13,36 +14,32 @@ const RemovePage = () => {
     const [foodMap, setFoodMap] = useState(new Map());
     const toast = useToast();
 
+    const fetchFoodMap = async () => {
+        const user = useAuthStore.getState().user
+        const refrigeratorId = user?.refrigeratorId;
+        if (!refrigeratorId) {
+            console.warn("No refrigerator ID found.");
+            return;
+        }
+        try {
+            const { data } = await api.get(`/refrigerator/${refrigeratorId}/foodMap`)
+            const foodData = data.foodMap
+            const map = new Map(Object.entries(foodData));
+            setFoodMap(map);
+        } catch (error) {
+            console.error('Error fetching food map:', error);
+        }
+    }
+
     useEffect(() => {
-        const fetchFoodMap = async () => {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const refrigeratorId = user?.refrigeratorId;
-            if (!refrigeratorId) {
-                console.warn("No refrigerator ID found.");
-                return;
-            }
-            try {
-                const response = await axios.get(`http://localhost:5050/api/refrigerator/${refrigeratorId}/foodMap`, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    }
-                });
-                const foodData = response.data.foodMap;
-                const map = new Map(Object.entries(foodData));
-                setFoodMap(map);
-            } catch (error) {
-                console.error('Error fetching food map:', error);
-            }
-        };
-        
         fetchFoodMap();
     }, []);
 
     const handleRemoveFood = async () => {
-        const { foodName, quantity } = newFood;
-        const user = JSON.parse(localStorage.getItem("user"));
+        const { foodName, quantity } = foodToRemove;
+        const user = useAuthStore.getState().user
         const refrigeratorId = user?.refrigeratorId;
-        console.log("Removing food:", newFood);
+        console.log("Removing food:", foodToRemove);
         if (!refrigeratorId) {
             toast({
                 title: 'Error',
@@ -74,12 +71,9 @@ const RemovePage = () => {
         }
 
         try {
-            const response = await axios.delete(`http://localhost:5050/api/refrigerator/${refrigeratorId}/removeFoods`, {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
+            const response = await api.delete(`/refrigerator/${refrigeratorId}/removeFoods`, {
                 data: { foodName, quantity }
-            });
+            })
 
             if (response.status === 200) {
                 toast({
@@ -87,21 +81,9 @@ const RemovePage = () => {
                     description: 'Food removed successfully.',
                     status: 'success',
                     isClosable: true,
-                });
-
-                // Reset form after success
+                })
                 setNewFood({ foodName: '', quantity: '' });
-
-                // Re-fetch the foodMap after adding a new food
-                const updatedRes = await axios.get(`http://localhost:5050/api/refrigerator/${refrigeratorId}/foodMap`, {
-                    headers: {
-                        Authorization: `Bearer ${user.token}`,
-                    }
-                });
-                const updatedFoodMap = new Map(Object.entries(updatedRes.data.foodMap));
-                //const updatedFoodMap = new Map(foodMap);
-                //updatedFoodMap.set(foodName, quantity); // Add the new food to the Map
-                setFoodMap(updatedFoodMap);
+                fetchFoodMap()
             } else {
                 toast({
                     title: 'Error',
@@ -113,7 +95,6 @@ const RemovePage = () => {
         } catch (error) {
             console.error('Error removing food:', error);
             
-            // Log error details for better debugging
             if (error.response) {
                 console.error('Error response:', error.response);
                 toast({
@@ -147,14 +128,14 @@ const RemovePage = () => {
                     <VStack spacing={10}>
                         <Input
                             placeholder='Food name'
-                            value={newFood.foodName}
-                            onChange={(e) => setNewFood({ ...newFood, foodName: e.target.value })}
+                            value={foodToRemove.foodName}
+                            onChange={(e) => setNewFood({ ...foodToRemove, foodName: e.target.value })}
                         />
                         <Input
                             placeholder='Quantity' 
                             type='number'
-                            value={newFood.quantity}
-                            onChange={(e) => setNewFood({ ...newFood, quantity: e.target.value })}
+                            value={foodToRemove.quantity}
+                            onChange={(e) => setNewFood({ ...foodToRemove, quantity: e.target.value })}
                         />
 
                         <Button type="button" colorScheme="blue" onClick={() =>{
