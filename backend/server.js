@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 //import userRoutes from './routes/userRoutes.js';
 import refrigeratorRoutes from './routes/refrigeratorRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import scanRoutes from './routes/scanRoutes.js'
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ try {
         app.use('/api/auth', authRoutes);
         //app.use('/api/user', userRoutes);
         app.use('/api/refrigerator', refrigeratorRoutes);
+        app.use('/api/scan', scanRoutes)
         
 
         // Server Listening
