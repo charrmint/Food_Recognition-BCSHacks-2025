@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
-//import userRoutes from './routes/userRoutes.js';
 import refrigeratorRoutes from './routes/refrigeratorRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import scanRoutes from './routes/scanRoutes.js'
@@ -26,7 +25,6 @@ try {
         console.log(`MongoDB Connected:`, process.env.MONGO_URI);
         // Routes
         app.use('/api/auth', authRoutes);
-        //app.use('/api/user', userRoutes);
         app.use('/api/refrigerator', refrigeratorRoutes);
         app.use('/api/scan', scanRoutes)
         
@@ -36,5 +34,5 @@ try {
     })
 } catch (error) {
     console.error(`Error: ${error.message}`);
-    process.exit(1); // process code 1 means exit with failure, 0 means success
+    process.exit(1);
 }
