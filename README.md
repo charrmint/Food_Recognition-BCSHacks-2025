@@ -2,6 +2,14 @@
 
 A web application that helps you track your refrigerator inventory using manual entry or AI-powered image recognition via Google Cloud Vision API.
 
+## Disclaimer
+
+> **Note:** This is a proof-of-concept project with known limitations:
+>
+> - **No filtering on image recognition** - Google Vision API returns all detected labels (not just food items), so you may see non-food items added to your inventory
+> - **Camera placement** - Designed for a camera mounted inside a refrigerator, but currently uses webcam as a stand-in for demo purposes
+> - **Recognition accuracy** - Image recognition quality depends on lighting, image clarity, and Google Vision API's label detection capabilities
+
 ## Features
 
 - **User Authentication** - Local signup/login with JWT + Google OAuth
@@ -39,8 +47,8 @@ A web application that helps you track your refrigerator inventory using manual 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/charrmint/Food_Recognition-BCSHacks-2025.git
-cd Food_Recognition-BCSHacks-2025
+git clone https://github.com/charrmint/FoodRadar.git
+cd FoodRadar
 ```
 
 ### 2. Install dependencies
