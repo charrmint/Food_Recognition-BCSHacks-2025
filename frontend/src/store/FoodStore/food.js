@@ -24,7 +24,7 @@ export const useFoodStore = create((set) => ({
         const user = useAuthStore.getState().user
 
         if (!user?.refrigeratorId) {
-            return {success: false, message: "User does not have a refrigerator ID"};
+            return { success: false, message: 'No refrigerator ID found' }
         }
         if (!newFood.name || !newFood.quantity) {
             return {success:false, message:"Please give food name (water, apple, carrot)."}
@@ -49,8 +49,7 @@ export const useFoodStore = create((set) => ({
     fetchFood: async () => {
         const user = useAuthStore.getState().user
         if (!user?.refrigeratorId) {
-            console.warn("No refrigerator ID found.");
-            return;
+            return { success: false, message: 'No refrigerator ID found' }
         }
         try {
             const { data } = await api.get(`/refrigerator/${user.refrigeratorId}/foodMap`)
@@ -64,6 +63,32 @@ export const useFoodStore = create((set) => ({
             set({ foodList });
         } catch (error) {
             console.error("Error fetching food:", error);
+        }
+    },
+    removeFood: async ({ foodName, quantity }) => {
+        const user = useAuthStore.getState().user
+
+        if (!user?.refrigeratorId) {
+            return { success: false, message: 'No refrigerator ID found' }
+        }
+
+        if (!foodName || !quantity) {
+            return { success: false, message: 'Food name and quantity are required' }
+        }
+
+        try {
+            await api.delete(`/refrigerator/${user.refrigeratorId}/removeFoods`, {
+                data: { foodName, quantity: parseInt(quantity) }
+            })
+
+            await useFoodStore.getState().fetchFood()
+            return { success: true }
+        } catch (error) {
+            console.error('Error removing food:', error)
+            return { 
+                success: false, 
+                message: error.response?.data?.error || 'Failed to remove food' 
+            }
         }
     },
 }));
