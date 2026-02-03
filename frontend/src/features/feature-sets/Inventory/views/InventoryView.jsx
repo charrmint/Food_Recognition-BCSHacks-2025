@@ -13,7 +13,7 @@ export const InventoryView = ({ foodList }) => {
                     bgClip="text"
                     textAlign="center"
                 >
-                    messages.InventoryTitle
+                    {messages.inventoryTitle}
                 </Text>
 
                 <SimpleGrid
@@ -28,7 +28,7 @@ export const InventoryView = ({ foodList }) => {
                         ))
                     ) : (
                         <Text fontSize="xl" textAlign="center" fontWeight="bold" color="gray.500">
-                            messages.NoFoods
+                            {messages.noFoods}
                         </Text>
                     )}
                 </SimpleGrid>

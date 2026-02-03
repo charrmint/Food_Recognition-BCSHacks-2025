@@ -11,7 +11,7 @@ export const useAddFood = () => {
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const createFood = useFoodStore((state) => state.createFood)
-    const toast = useToas()
+    const toast = useToast()
 
     const handleInputChange = (e) => {
         const { name, value } = e.target

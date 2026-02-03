@@ -91,4 +91,26 @@ export const useFoodStore = create((set) => ({
             }
         }
     },
+    updateFoodMap: async (foodMap) => {
+        const user = useAuthStore.getState().user
+        
+        if (!user?.refrigeratorId) {
+            return { success: false, message: 'No refrigerator ID found' }
+        }
+        
+        try {
+            await api.post(`/refrigerator/${user.refrigeratorId}/updateFoodMap`, {
+                foodMap
+            })
+            
+            await useFoodStore.getState().fetchFood()
+            return { success: true }
+        } catch (error) {
+            console.error('Error updating food map:', error)
+            return { 
+                success: false, 
+                message: error.response?.data?.error || 'Failed to update food map' 
+            }
+        }
+    },
 }));

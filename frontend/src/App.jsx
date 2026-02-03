@@ -15,6 +15,7 @@ import OAuthCallback from './features/feature-sets/Auth/presenter/OAuthCallbackP
 import OAuthCallbackPresenter from './features/feature-sets/Auth/presenter/OAuthCallbackPresenter';
 import { useAuthStore } from './store/AuthStore';
 import ProtectedRoute from './components/ProtectedRoute';
+import DashboardPresenter from './features/feature-sets/Dashboard/presenter/DashboardPresenter';
 
 function App() {
   const fetchMe = useAuthStore((state) => state.fetchMe)
@@ -32,9 +33,13 @@ function App() {
     <Routes>
       <Route path="/auth" element={<AuthPagePresenter />}/>
       <Route path="/auth/callback" element={<OAuthCallbackPresenter />}/>
-
-
       <Route path= "/" element={
+        <ProtectedRoute>
+          <DashboardPresenter />
+        </ProtectedRoute>
+      } />
+
+      {/* <Route path= "/" element={
         <ProtectedRoute>
           <HomePage />
         </ProtectedRoute>
@@ -56,7 +61,7 @@ function App() {
         <ProtectedRoute>
           <RemovePage />
         </ProtectedRoute>
-      } />
+      } /> */}
     </Routes>
   )
 }

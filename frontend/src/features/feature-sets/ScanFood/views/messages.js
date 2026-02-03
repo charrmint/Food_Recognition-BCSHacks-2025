@@ -1,0 +1,18 @@
+export const messages = {
+    header: 'Scan Food',
+    subheader: 'Point your camera at food items to add them to your inventory',
+    turnOnCamera: 'Turn On Camera',
+    turnOffCamera: 'Turn Off Camera',
+    cameraOff: 'Camera is off. Click the button above to enable.',
+    captureButton: 'Capture',
+    retakeButton: 'Retake',
+    processingLabel: 'Processing...',
+    detectedLabel: 'Detected Items:',
+    toastSuccess: 'Success',
+    toastError: 'Error',
+    toastWarning: 'No Food Detected',
+    scanSuccess: (count) => `Added ${count} item(s) to your inventory.`,
+    noFoodsDetected: 'No food items were detected. Try again with better lighting.',
+    updateFailed: 'Failed to update inventory.',
+    processingFailed: 'Failed to process image.',
+}
