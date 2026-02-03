@@ -61,22 +61,19 @@ export const DashboardView = ({
             </Box>
 
             {/* Main Content */}
-            <Container maxW="container.xl" py={8}>
-                <VStack spacing={8} align="stretch">
+            <Container maxW="container.xl" py={4}>
+                <VStack spacing={4} align="stretch">
 
-                    {/* Top section: Inventory (left) | Add/Remove/Ask (right) */}
                     <Flex
                         direction={{ base: 'column', lg: 'row' }}
-                        gap={8}
+                        gap={4}
                         align="flex-start"
                     >
-                        {/* Inventory - takes more space */}
                         <Box flex="2" w="full">
                             <InventoryPresenter />
                         </Box>
 
-                        {/* Add, Remove, Ask - stacked on the right */}
-                        <VStack flex="1" spacing={6} w="full">
+                        <VStack flex="1" spacing={4} w="full">
                             <Box w="full">
                                 <AddFoodPresenter />
                             </Box>
@@ -91,7 +88,6 @@ export const DashboardView = ({
 
                     <Divider />
 
-                    {/* Bottom: Scan Food */}
                     <Box>
                         <ScanFoodPresenter />
                     </Box>
